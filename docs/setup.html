@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>インストール・初期設定 - Kashiwazaki SEO Heatmap マニュアル</title>
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+<button class="hamburger-btn" aria-label="メニューを開く">&#9776;</button>
+
+<nav class="sidebar">
+    <div class="sidebar-header">
+        <h2 style="color:#fff;">Kashiwazaki SEO Heatmap</h2>
+        <span class="version">v1.0.0</span>
+        <img src="images/main-visual.png" alt="" style="width:100%;border-radius:4px;margin-top:8px;">
+    </div>
+    <ul>
+        <li><a href="index.html">概要</a></li>
+        <li><a href="setup.html">インストール・初期設定</a></li>
+        <li><a href="heatmap.html">ヒートマップ画面</a></li>
+        <li><a href="dashboard.html">ダッシュボード画面</a></li>
+        <li><a href="settings.html">設定画面</a></li>
+        <li><a href="troubleshooting.html">トラブルシューティング</a></li>
+    </ul>
+</nav>
+
+<main class="content">
+    <h1>インストール・初期設定</h1>
+    <p class="lead">このページでは、プラグインを設置してから、はじめてヒートマップにデータが表示されるまでの流れを説明します。</p>
+
+    <section>
+        <h2>インストール手順</h2>
+        <p>WordPress の管理画面から、次の手順でインストールします。</p>
+        <h3>管理画面からインストールする</h3>
+        <ol>
+            <li>管理画面の左メニューで「プラグイン」→「新規プラグインを追加」を開きます。</li>
+            <li>右上の「プラグインのアップロード」ボタンを押します。</li>
+            <li>配布されている zip ファイルを選んで「今すぐインストール」を押します。</li>
+            <li>インストールが終わったら「プラグインを有効化」を押します。</li>
+        </ol>
+        <h3>FTP などで設置する場合</h3>
+        <ol>
+            <li>プラグインのフォルダーを、サーバーのプラグイン設置場所にアップロードします。</li>
+            <li>管理画面の「プラグイン」→「インストール済みプラグイン」を開きます。</li>
+            <li>一覧に「Kashiwazaki SEO Heatmap」が表示されるので、「有効化」を押します。</li>
+        </ol>
+        <p>有効化すると、データを保存するための準備が自動で行われます。特別な操作は必要ありません。</p>
+
+        <figure class="screenshot">
+            <img src="images/screenshots/30-plugins-list.png" alt="プラグイン一覧に表示された Kashiwazaki SEO Heatmap" class="lightbox-trigger">
+            <figcaption>図: 「インストール済みプラグイン」の一覧に表示された状態</figcaption>
+        </figure>
+
+        <div class="callout callout-note">
+            <p>プラグインの一覧で「有効化」のリンクのほかに「設定」のリンクが表示されます。そこからも設定画面を開けます。</p>
+        </div>
+    </section>
+
+    <section>
+        <h2>管理メニューの場所</h2>
+        <p>有効化すると、管理画面の左メニューに「Kashiwazaki SEO Heatmap」が追加されます。メニューの中には次の 3 つの画面があります。</p>
+        <table>
+            <thead>
+                <tr>
+                    <th style="width:35%;">メニュー項目</th>
+                    <th>できること</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr><td>ヒートマップ</td><td>選んだページのどこがクリックされているかを表示します。</td></tr>
+                <tr><td>ダッシュボード</td><td>サイト全体の閲覧数・クリック数などの集計を表示します。</td></tr>
+                <tr><td>設定</td><td>計測する対象や除外の条件、データの保持などを設定します。</td></tr>
+            </tbody>
+        </table>
+
+        <figure class="screenshot">
+            <img src="images/screenshots/00-menu-location.png" alt="左メニューに追加された Kashiwazaki SEO Heatmap" class="lightbox-trigger">
+            <figcaption>図: 左メニューに追加された「Kashiwazaki SEO Heatmap」</figcaption>
+        </figure>
+    </section>
+
+    <figure class="infographic">
+        <img src="images/infographics/setup-flow.png" alt="インストールから計測開始までの流れ">
+        <figcaption>図: インストールから計測開始までの流れ</figcaption>
+    </figure>
+
+    <section>
+        <h2>計測を始めるまでの初期設定</h2>
+        <p>プラグインを有効化しただけでは計測は始まりません。<strong>計測する対象の投稿タイプを選ぶ</strong>必要があります。最初にこの設定を行ってください。</p>
+
+        <h3>手順</h3>
+        <ol>
+            <li>左メニューの「Kashiwazaki SEO Heatmap」→「設定」を開きます。</li>
+            <li>「計測する対象」の「計測する投稿タイプ」で、計測したい投稿タイプにチェックを入れます。はじめは「投稿」と「固定ページ」にチェックが入っています。投稿タイプが多いときは、「一括チェック」「一括解除」でまとめて選べます。</li>
+            <li>必要に応じて「計測する項目」を選びます。はじめはクリック・スクロール到達率・レイジクリック・デッドクリック・外部リンクのクリックが記録される設定です。</li>
+            <li>「設定を保存」を押します。</li>
+        </ol>
+
+        <figure class="screenshot">
+            <img src="images/screenshots/24-settings-initial.png" alt="設定画面の保存ボタンと初期状態" class="lightbox-trigger">
+            <figcaption>図: 「設定を保存」ボタン</figcaption>
+        </figure>
+
+        <div class="callout callout-tip">
+            <p>どの投稿タイプを計測すべきか迷ったら、まずは「投稿」と「固定ページ」だけにしておくのがおすすめです。あとから自由に追加・変更できます。</p>
+        </div>
+
+        <div class="callout callout-warning">
+            <p>計測する投稿タイプにチェックを入れていないと、ページを閲覧してもデータは記録されません。ダッシュボード画面にも「計測対象の投稿タイプがまだ選ばれていません」という警告が表示されます。</p>
+        </div>
+    </section>
+
+    <section>
+        <h2>計測が始まるタイミング</h2>
+        <p>設定を保存したあと、対象のページを実際にブラウザで閲覧すると計測が始まります。</p>
+        <ul>
+            <li>ページを閉じるまで（または一定の間隔ごとに）、クリックやスクロールなどの操作がまとめて送信されます。</li>
+            <li>送信されたデータは集計され、ヒートマップやダッシュボードに反映されます。反映までに少し時間がかかることがあります。</li>
+            <li>自分でページを確認するときは、「ログイン中のユーザーを計測から除外する」設定がはじめから有効になっているため、管理者の操作は計測に混ざりません。</li>
+        </ul>
+
+        <div class="callout callout-note">
+            <p>データをすぐに確認したい場合は、一般のブラウザ（ログインしていない状態）で対象ページを開き、いくつかクリックやスクロールをしてみてください。数秒後にヒートマップ画面へ表示されます。</p>
+        </div>
+    </section>
+
+    <nav class="page-nav">
+        <a href="index.html" class="prev">&laquo; 概要</a>
+        <a href="heatmap.html" class="next">ヒートマップ画面 &raquo;</a>
+    </nav>
+
+    <footer class="manual-footer">
+        <p>作者: <a href="https://www.tsuyoshikashiwazaki.jp/profile/" target="_blank" rel="noopener">柏崎剛（Tsuyoshi Kashiwazaki）</a></p>
+        <p>プラグイン: Kashiwazaki SEO Heatmap v1.0.0 | <a href="https://github.com/TsuyoshiKashiwazaki/wp-plugin-kashiwazaki-seo-heatmap" target="_blank" rel="noopener">GitHub</a></p>
+    </footer>
+</main>
+
+<div class="lightbox"></div>
+<script src="js/manual.js"></script>
+</body>
+</html>

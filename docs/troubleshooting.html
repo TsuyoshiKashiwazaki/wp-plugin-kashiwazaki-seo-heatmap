@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>トラブルシューティング - Kashiwazaki SEO Heatmap マニュアル</title>
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+<button class="hamburger-btn" aria-label="メニューを開く">&#9776;</button>
+
+<nav class="sidebar">
+    <div class="sidebar-header">
+        <h2 style="color:#fff;">Kashiwazaki SEO Heatmap</h2>
+        <span class="version">v1.0.0</span>
+        <img src="images/main-visual.png" alt="" style="width:100%;border-radius:4px;margin-top:8px;">
+    </div>
+    <ul>
+        <li><a href="index.html">概要</a></li>
+        <li><a href="setup.html">インストール・初期設定</a></li>
+        <li><a href="heatmap.html">ヒートマップ画面</a></li>
+        <li><a href="dashboard.html">ダッシュボード画面</a></li>
+        <li><a href="settings.html">設定画面</a></li>
+        <li><a href="troubleshooting.html">トラブルシューティング</a></li>
+    </ul>
+</nav>
+
+<main class="content">
+    <h1>トラブルシューティング</h1>
+    <p class="lead">「データが表示されない」「数が思ったより少ない」など、よくあるつまずきと、その確認方法をまとめます。</p>
+
+    <section>
+        <h2>まず確認すること</h2>
+        <p>数値が思うように出ないときは、次の 3 点を上から順に確認してください。ほとんどの場合はここで解決します。</p>
+        <ol>
+            <li><strong>計測する投稿タイプが選ばれているか</strong>: 設定画面の「計測する対象」で、見たいページの種類にチェックが入っているか確認します。</li>
+            <li><strong>対象ページを実際に閲覧したか</strong>: 計測はページが閲覧されたときに始まります。まだ誰も見ていなければデータはありません。</li>
+            <li><strong>除外されるユーザーで見ていないか</strong>: ログイン中のユーザーは計測から外れる設定になっています。確認するときは、ログインしていない一般のブラウザでページを開いてみてください。</li>
+        </ol>
+    </section>
+
+    <figure class="infographic">
+        <img src="images/infographics/troubleshoot-flow.png" alt="データが出ないときの確認の流れ">
+        <figcaption>図: データが出ないときの確認順序（症状 → 確認 → 対処）</figcaption>
+    </figure>
+
+    <section>
+        <h2>よくある症状と対処</h2>
+
+        <h3>ヒートマップにデータが出ない</h3>
+        <p><strong>症状</strong>: ヒートマップ画面やダッシュボードに「まだデータがありません。」と表示される。</p>
+        <p><strong>確認すること</strong>:</p>
+        <ul>
+            <li>設定画面の「計測する対象」で、対象の投稿タイプにチェックが入っているか。</li>
+            <li>対象のページを実際に閲覧したか。</li>
+            <li>閲覧したのが、除外されるユーザー（ログイン中の管理者など）ではないか。</li>
+        </ul>
+        <p><strong>対処</strong>: 設定にチェックを入れて保存し、ログインしていないブラウザで対象ページを開いて、いくつかクリックやスクロールをしてみてください。数秒後にデータが表示されます。</p>
+
+        <h3>ダッシュボードに警告が出る</h3>
+        <p><strong>症状</strong>: 「計測対象の投稿タイプがまだ選ばれていません。…」という警告が表示される。</p>
+        <p><strong>原因</strong>: 計測する投稿タイプが 1 つも選ばれていません。</p>
+        <p><strong>対処</strong>: 警告の中の「設定を開く」を押し、「計測する対象」で投稿タイプにチェックを入れて保存します。</p>
+
+        <h3>クリックしたのに数が増えない</h3>
+        <p><strong>症状</strong>: 自分でクリックしてもクリック数が増えない。</p>
+        <p><strong>確認すること</strong>: ログイン中のユーザーは計測から除外されます。また、除外する権限グループに自分の役割が入っていないか確認してください。</p>
+        <p><strong>対処</strong>: ログインしていないブラウザで試すと計測されます。自分のアクセスも計測したい特別な場合は、設定の「ログイン中のユーザーを計測から除外する」と「除外する権限グループ」を見直してください。</p>
+
+        <h3>マウスムーブのデータが無い</h3>
+        <p><strong>症状</strong>: ヒートマップ画面の「表示するデータ」で「マウスムーブ」を選んでも何も表示されない。</p>
+        <p><strong>原因</strong>: 「マウスムーブ」の記録がはじめはオフになっています。</p>
+        <p><strong>対処</strong>: 設定画面の「計測する対象」→「計測する項目」で「マウスムーブ」にチェックを入れて保存します。データ量が増えるため、必要なときだけオンにしてください。</p>
+
+        <h3>スクロール到達率が思ったより低い</h3>
+        <p><strong>症状</strong>: ページの下のほうまで見られているのに、到達率が低く出る。</p>
+        <p><strong>確認すること</strong>: 端末の絞り込みが「すべて」になっていないか確認してください。スマートフォンでは画面が小さいため、パソコンより早く下まで到達します。</p>
+        <p><strong>対処</strong>: ツールバーの「端末」を切り替えて、パソコンとスマートフォンを別々に見ると、実態がつかみやすくなります。</p>
+
+        <h3>配色や半径を変えても見た目が変わらない</h3>
+        <p><strong>症状</strong>: ツールバーで「半径」「濃さ」「配色」を変えてもプレビューが変わらない。</p>
+        <p><strong>原因</strong>: 条件を変えたあと、更新していない可能性があります。</p>
+        <p><strong>対処</strong>: 条件を変えたら「表示を更新」ボタンを押してください。</p>
+    </section>
+
+    <section>
+        <h2>動作要件</h2>
+        <p>ご利用の環境が次の条件を満たしているか確認してください。満たしていないと、正しく動作しないことがあります。</p>
+        <table>
+            <thead>
+                <tr>
+                    <th style="width:35%;">項目</th>
+                    <th>要件</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr><td>WordPress</td><td>6.0 以上</td></tr>
+                <tr><td>PHP</td><td>7.4 以上</td></tr>
+                <tr><td>対応ブラウザ</td><td>Chrome / Firefox / Safari / Edge の各最新版</td></tr>
+                <tr><td>管理画面の権限</td><td>管理者（設定の変更とヒートマップの閲覧に必要）</td></tr>
+                <tr><td>必要な機能</td><td>WordPress の標準機能のみ。外部サービスへの接続は不要です</td></tr>
+            </tbody>
+        </table>
+    </section>
+
+    <section>
+        <h2>データの量と保存について</h2>
+        <ul>
+            <li>個々の操作を記録した詳しいデータ（生データ）は、既定で 180 日を過ぎると自動で削除されます。集計された数値は残ります。</li>
+            <li>アクセスが非常に多いサイトでは、設定の「サンプリング（%）」を下げるとデータ量を抑えられます。</li>
+            <li>保存されているデータをすべて消したいときは、設定画面の「計測データの削除」から削除できます。この操作は元に戻せません。</li>
+        </ul>
+    </section>
+
+    <section>
+        <h2>それでも解決しないとき</h2>
+        <div class="callout callout-note">
+            <p>上を確認しても解決しない場合は、次の情報を添えてお問い合わせください。（1）症状が出る画面、（2）行った操作の手順、（3）ご利用の WordPress と PHP のバージョン、（4）ご利用のブラウザ。ログイン情報やパスワードは送らないでください。</p>
+        </div>
+    </section>
+
+    <nav class="page-nav">
+        <a href="settings.html" class="prev">&laquo; 設定画面</a>
+        <span></span>
+    </nav>
+
+    <footer class="manual-footer">
+        <p>作者: <a href="https://www.tsuyoshikashiwazaki.jp/profile/" target="_blank" rel="noopener">柏崎剛（Tsuyoshi Kashiwazaki）</a></p>
+        <p>プラグイン: Kashiwazaki SEO Heatmap v1.0.0 | <a href="https://github.com/TsuyoshiKashiwazaki/wp-plugin-kashiwazaki-seo-heatmap" target="_blank" rel="noopener">GitHub</a></p>
+    </footer>
+</main>
+
+<div class="lightbox"></div>
+<script src="js/manual.js"></script>
+</body>
+</html>

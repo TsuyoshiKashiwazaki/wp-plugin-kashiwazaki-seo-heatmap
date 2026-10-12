@@ -1,0 +1,359 @@
+/**
+ * Kashiwazaki SEO Heatmap - 管理画面のスタイル。
+ *
+ * @package Kashiwazaki_SEO_Heatmap
+ */
+
+.kashiwazaki-seo-heatmap-wrap .kashiwazaki-seo-heatmap-lead {
+	font-size: 14px;
+	max-width: 900px;
+}
+
+.kashiwazaki-seo-heatmap-toolbar {
+	display: flex;
+	flex-wrap: wrap;
+	align-items: flex-end;
+	gap: 12px;
+	padding: 12px 14px;
+	margin: 12px 0 16px;
+	background: #fff;
+	border: 1px solid #c3c4c7;
+	border-radius: 4px;
+	box-shadow: 0 1px 1px rgba( 0, 0, 0, 0.04 );
+}
+
+.kashiwazaki-seo-heatmap-field {
+	display: flex;
+	flex-direction: column;
+	gap: 4px;
+	min-width: 180px;
+}
+
+.kashiwazaki-seo-heatmap-field label {
+	font-weight: 600;
+	font-size: 12px;
+	color: #1d2327;
+}
+
+.kashiwazaki-seo-heatmap-field select,
+.kashiwazaki-seo-heatmap-field input[type="search"],
+.kashiwazaki-seo-heatmap-field input[type="number"] {
+	max-width: 100%;
+}
+
+.kashiwazaki-seo-heatmap-field-narrow {
+	min-width: 120px;
+}
+
+.kashiwazaki-seo-heatmap-field-buttons {
+	flex-direction: row;
+	align-items: center;
+	gap: 8px;
+	margin-left: auto;
+}
+
+.kashiwazaki-seo-heatmap-post-type-actions {
+	display: flex;
+	flex-wrap: wrap;
+	gap: 8px;
+	margin: 0 0 8px;
+}
+
+.kashiwazaki-seo-heatmap-summary {
+	display: flex;
+	flex-wrap: wrap;
+	gap: 12px;
+	margin: 0 0 16px;
+}
+
+.kashiwazaki-seo-heatmap-card {
+	flex: 1 1 140px;
+	min-width: 130px;
+	padding: 12px 14px;
+	background: #fff;
+	border: 1px solid #c3c4c7;
+	border-left: 4px solid #2271b1;
+	border-radius: 4px;
+	box-shadow: 0 1px 1px rgba( 0, 0, 0, 0.04 );
+}
+
+.kashiwazaki-seo-heatmap-card-alert {
+	border-left-color: #d63638;
+}
+
+.kashiwazaki-seo-heatmap-card-value {
+	display: block;
+	font-size: 24px;
+	font-weight: 700;
+	line-height: 1.2;
+	color: #1d2327;
+}
+
+.kashiwazaki-seo-heatmap-card-label {
+	display: block;
+	margin-top: 4px;
+	font-size: 12px;
+	color: #50575e;
+}
+
+.kashiwazaki-seo-heatmap-layout {
+	display: flex;
+	flex-wrap: wrap;
+	gap: 16px;
+	align-items: flex-start;
+}
+
+.kashiwazaki-seo-heatmap-canvas-area {
+	flex: 1 1 640px;
+	min-width: 320px;
+}
+
+.kashiwazaki-seo-heatmap-frame-toolbar {
+	display: flex;
+	flex-wrap: wrap;
+	align-items: center;
+	gap: 8px;
+	margin-bottom: 6px;
+}
+
+.kashiwazaki-seo-heatmap-frame-label {
+	font-weight: 600;
+	font-size: 12px;
+}
+
+.kashiwazaki-seo-heatmap-width-btn.is-active {
+	background: #2271b1;
+	border-color: #2271b1;
+	color: #fff;
+}
+
+.kashiwazaki-seo-heatmap-frame-url {
+	margin-left: auto;
+	font-size: 12px;
+	color: #50575e;
+	word-break: break-all;
+}
+
+.kashiwazaki-seo-heatmap-frame-wrap {
+	position: relative;
+	max-height: 78vh;
+	overflow: auto;
+	background: #fff;
+	border: 1px solid #c3c4c7;
+	border-radius: 4px;
+}
+
+.kashiwazaki-seo-heatmap-frame-inner {
+	position: relative;
+	margin: 0 auto;
+}
+
+.kashiwazaki-seo-heatmap-frame-inner iframe {
+	display: block;
+	width: 100%;
+	border: 0;
+	margin: 0;
+	background: #fff;
+}
+
+#kashiwazaki-seo-heatmap-canvas {
+	position: absolute;
+	top: 0;
+	left: 0;
+	pointer-events: auto;
+	cursor: crosshair;
+}
+
+.kashiwazaki-seo-heatmap-frame-wrap.is-interactive #kashiwazaki-seo-heatmap-canvas {
+	display: none;
+}
+
+.kashiwazaki-seo-heatmap-placeholder {
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	min-height: 320px;
+	color: #646970;
+}
+
+.kashiwazaki-seo-heatmap-placeholder.is-hidden {
+	display: none;
+}
+
+/* 選んだ種類のデータが 1 件も無いときの案内。何も出ないと壊れて見えるため。 */
+.kashiwazaki-seo-heatmap-frame-notice {
+	margin: 0 0 6px;
+	padding: 6px 10px;
+	background: #fcf9e8;
+	border: 1px solid #dba617;
+	border-radius: 3px;
+	color: #614200;
+	font-size: 12px;
+	line-height: 1.6;
+}
+
+.kashiwazaki-seo-heatmap-frame-notice[hidden] {
+	display: none;
+}
+
+.kashiwazaki-seo-heatmap-side {
+	flex: 0 1 380px;
+	min-width: 300px;
+}
+
+.kashiwazaki-seo-heatmap-side h2 {
+	font-size: 14px;
+	margin: 16px 0 8px;
+}
+
+.kashiwazaki-seo-heatmap-side h2:first-child {
+	margin-top: 0;
+}
+
+.kashiwazaki-seo-heatmap-table-wrap {
+	max-height: 320px;
+	overflow: auto;
+	border: 1px solid #c3c4c7;
+	border-radius: 4px;
+	background: #fff;
+}
+
+.kashiwazaki-seo-heatmap-table th {
+	font-size: 12px;
+}
+
+.kashiwazaki-seo-heatmap-table td {
+	font-size: 12px;
+	vertical-align: top;
+}
+
+.kashiwazaki-seo-heatmap-table tbody tr.kashiwazaki-seo-heatmap-row-active {
+	background: #f0f6fc;
+	outline: 2px solid #2271b1;
+	outline-offset: -2px;
+}
+
+.kashiwazaki-seo-heatmap-element-text {
+	font-weight: 600;
+	word-break: break-all;
+}
+
+.kashiwazaki-seo-heatmap-element-meta {
+	color: #646970;
+	font-size: 11px;
+}
+
+.kashiwazaki-seo-heatmap-scroll-chart {
+	padding: 10px 12px;
+	background: #fff;
+	border: 1px solid #c3c4c7;
+	border-radius: 4px;
+}
+
+.kashiwazaki-seo-heatmap-scroll-row {
+	display: flex;
+	align-items: center;
+	gap: 8px;
+	margin-bottom: 4px;
+}
+
+.kashiwazaki-seo-heatmap-scroll-depth {
+	width: 46px;
+	font-size: 12px;
+	color: #50575e;
+	text-align: right;
+}
+
+.kashiwazaki-seo-heatmap-scroll-bar {
+	flex: 1;
+	height: 14px;
+	background: #f0f0f1;
+	border-radius: 2px;
+	overflow: hidden;
+}
+
+.kashiwazaki-seo-heatmap-scroll-bar span {
+	display: block;
+	height: 100%;
+	background: linear-gradient( 90deg, #72aee6, #2271b1 );
+}
+
+.kashiwazaki-seo-heatmap-scroll-count {
+	width: 62px;
+	font-size: 12px;
+	text-align: right;
+	color: #1d2327;
+}
+
+.kashiwazaki-seo-heatmap-chart-box {
+	padding: 12px;
+	background: #fff;
+	border: 1px solid #c3c4c7;
+	border-radius: 4px;
+}
+
+.kashiwazaki-seo-heatmap-chart-box canvas {
+	display: block;
+	width: 100%;
+	height: 260px;
+}
+
+.kashiwazaki-seo-heatmap-legend {
+	display: flex;
+	gap: 16px;
+	font-size: 12px;
+	color: #50575e;
+}
+
+.kashiwazaki-seo-heatmap-legend-item::before {
+	content: "";
+	display: inline-block;
+	width: 12px;
+	height: 12px;
+	margin-right: 4px;
+	vertical-align: -2px;
+	border-radius: 2px;
+}
+
+.kashiwazaki-seo-heatmap-legend-pageviews::before {
+	background: #2271b1;
+}
+
+.kashiwazaki-seo-heatmap-legend-clicks::before {
+	background: #d63638;
+}
+
+.kashiwazaki-seo-heatmap-tooltip {
+	position: fixed;
+	z-index: 100000;
+	max-width: 280px;
+	padding: 6px 9px;
+	background: rgba( 0, 0, 0, 0.86 );
+	color: #fff;
+	font-size: 12px;
+	line-height: 1.5;
+	border-radius: 4px;
+	pointer-events: none;
+	display: none;
+}
+
+.kashiwazaki-seo-heatmap-notice {
+	padding: 10px 12px;
+	margin-bottom: 12px;
+	background: #fcf9e8;
+	border-left: 4px solid #dba617;
+}
+
+.kashiwazaki-seo-heatmap-help li {
+	margin-bottom: 6px;
+}
+
+.kashiwazaki-seo-heatmap-danger {
+	color: #b32d2e;
+	border-color: #b32d2e;
+}
+
+.kashiwazaki-seo-heatmap-check {
+	display: inline-block;
+	margin-right: 12px;
+}

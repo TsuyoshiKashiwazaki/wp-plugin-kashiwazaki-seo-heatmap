@@ -1,0 +1,236 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>設定画面 - Kashiwazaki SEO Heatmap マニュアル</title>
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+<button class="hamburger-btn" aria-label="メニューを開く">&#9776;</button>
+
+<nav class="sidebar">
+    <div class="sidebar-header">
+        <h2 style="color:#fff;">Kashiwazaki SEO Heatmap</h2>
+        <span class="version">v1.0.0</span>
+        <img src="images/main-visual.png" alt="" style="width:100%;border-radius:4px;margin-top:8px;">
+    </div>
+    <ul>
+        <li><a href="index.html">概要</a></li>
+        <li><a href="setup.html">インストール・初期設定</a></li>
+        <li><a href="heatmap.html">ヒートマップ画面</a></li>
+        <li><a href="dashboard.html">ダッシュボード画面</a></li>
+        <li><a href="settings.html">設定画面</a></li>
+        <li><a href="troubleshooting.html">トラブルシューティング</a></li>
+    </ul>
+</nav>
+
+<main class="content">
+    <h1>設定画面</h1>
+    <p class="lead">計測する対象や除外の条件、データの保持などを設定します。計測を始めるための最初の設定もこの画面で行います。</p>
+
+    <p>設定画面は 7 つのまとまりでできています。上から順に「計測する対象」「除外する条件」「プライバシーとデータの保持」「判定のしきい値」「ヒートマップの初期表示」「計測データの削除」「使い方」です。変更したら、ページ下部の「設定を保存」を押すと反映されます。</p>
+
+    <figure class="screenshot">
+        <img src="images/screenshots/19-settings-full.png" alt="設定画面の全体" class="lightbox-trigger">
+        <figcaption>図: 設定画面の全体。7 つのまとまりが縦に並びます。</figcaption>
+    </figure>
+
+    <figure class="infographic">
+        <img src="images/infographics/settings-map.png" alt="設定画面の7つのセクション">
+        <figcaption>図: 設定画面は 7 つのまとまりでできている</figcaption>
+    </figure>
+
+    <section>
+        <h2>計測する対象</h2>
+        <figure class="screenshot">
+            <img src="images/screenshots/20-settings-targets.png" alt="計測する対象の設定" class="lightbox-trigger">
+            <figcaption>図: 「計測する対象」の設定</figcaption>
+        </figure>
+
+        <h3>計測する投稿タイプ</h3>
+        <p><strong>何をするものか</strong>: どの種類のページを計測するかを選びます。ここにチェックを入れた投稿タイプのページだけが、「どこがクリックされているか」の計測対象になります。</p>
+        <p><strong>説明</strong>: 画面には「チェックを入れた投稿タイプだけを計測します。ここで選んだものの「どこがクリックされているか」がヒートマップで見られます。」と表示されます。</p>
+        <p><strong>既定値</strong>: 「投稿」と「固定ページ」にチェックが入っています。そのほか、サイトで使っているカスタム投稿の種類も一覧に並びます。</p>
+        <p><strong>選択肢と結果</strong>: チェックを入れた種類のページだけが計測されます。チェックを外した種類のページは、閲覧されてもデータは記録されません。</p>
+        <p><strong>一括チェック・一括解除</strong>: 「計測する投稿タイプ」の下に「一括チェック」と「一括解除」の 2 つのボタンがあります。「一括チェック」を押すと一覧のすべての投稿タイプにチェックが入り、「一括解除」を押すとすべてのチェックが外れます。投稿タイプが多くて 1 つずつ選ぶのが大変なときに使います。どちらのボタンもその場でチェックの状態を変えるだけで、「設定を保存」を押すまでは保存されません。</p>
+        <div class="callout callout-warning">
+            <p>ここに何もチェックが入っていないと計測が始まりません。ダッシュボード画面にも警告が表示されます。</p>
+        </div>
+
+        <h3>計測する項目</h3>
+        <p><strong>何をするものか</strong>: 記録する行動の種類を選びます。</p>
+        <p><strong>既定値</strong>: 「クリック」「スクロール到達率」「レイジクリック」「デッドクリック」「外部リンクのクリック」にチェックが入り、「マウスムーブ」は外れています。</p>
+        <table>
+            <thead>
+                <tr><th style="width:40%;">項目</th><th>記録される内容</th></tr>
+            </thead>
+            <tbody>
+                <tr><td>クリック</td><td>ページ内のクリックを記録します。</td></tr>
+                <tr><td>スクロール到達率</td><td>どこまでスクロールされたかを記録します。</td></tr>
+                <tr><td>マウスムーブ</td><td>マウスの動きの分布を記録します。動きが多いため、記録されるデータ量が増えます。はじめは外れています。</td></tr>
+                <tr><td>レイジクリック</td><td>同じ場所を短時間に連打したことを記録します。</td></tr>
+                <tr><td>デッドクリック</td><td>押しても何も起きないクリックを記録します。</td></tr>
+                <tr><td>外部リンクのクリック</td><td>外部サイトへのリンクのクリックを記録します。</td></tr>
+            </tbody>
+        </table>
+        <div class="callout callout-note">
+            <p>「マウスムーブ」をオンにすると、ヒートマップ画面の「表示するデータ」でマウスの動きの分布を選べるようになります。ただしデータ量が増えるため、必要なときだけオンにするのがおすすめです。</p>
+        </div>
+    </section>
+
+    <section>
+        <h2>除外する条件</h2>
+        <figure class="screenshot">
+            <img src="images/screenshots/21-settings-exclusions.png" alt="除外する条件の設定" class="lightbox-trigger">
+            <figcaption>図: 「除外する条件」の設定</figcaption>
+        </figure>
+
+        <h3>ログイン中は計測しない</h3>
+        <p><strong>何をするものか</strong>: ログインしている状態でページを見たとき、そのアクセスを計測から外します。チェックボックスには「ログイン中のユーザーを計測から除外する」と表示され、その下に「自分のアクセスが混ざるのを防ぎます。」と書かれています。<strong>既定値</strong>はオンです。</p>
+        <div class="callout callout-tip">
+            <p>自分でサイトを確認することが多い場合、この設定をオンにしておくと、自分のクリックが集計に混ざりません。はじめからオンになっています。</p>
+        </div>
+
+        <h3>除外する権限グループ</h3>
+        <p><strong>何をするものか</strong>: どの役割のユーザーのアクセスを除外するかを選びます。サイトで使っている権限グループ（管理者・編集者など）が一覧に並びます。<strong>既定値</strong>は「管理者」と「編集者」です。</p>
+
+        <h3>除外する IP アドレス</h3>
+        <p><strong>何をするものか</strong>: 特定の IP アドレスからのアクセスを計測から外します。1 行に 1 つずつ入力します。完全一致のほか、末尾に「*」を付けると前方一致で指定できます。はじめは空欄です。</p>
+        <p><strong>注意点</strong>: 入力した IP アドレスは除外の判定にだけ使われ、データベースには保存されません。</p>
+
+        <h3>除外する URL パターン</h3>
+        <p><strong>何をするものか</strong>: 特定の URL を含むページを計測から外します。1 行に 1 つずつ入力し、URL の一部が一致すると除外されます。はじめは空欄です。</p>
+        <div class="callout callout-note">
+            <p>お問い合わせの完了ページや、特定のキャンペーンページなど、計測したくないページがあるときに使います。</p>
+        </div>
+    </section>
+
+    <section>
+        <h2>プライバシーとデータの保持</h2>
+        <figure class="screenshot">
+            <img src="images/screenshots/22-settings-privacy.png" alt="プライバシーとデータの保持の設定" class="lightbox-trigger">
+            <figcaption>図: 「プライバシーとデータの保持」の設定</figcaption>
+        </figure>
+
+        <h3>ブラウザの「追跡しない」設定を尊重する</h3>
+        <p><strong>何をするものか</strong>: 訪問者のブラウザで「追跡しない（Do Not Track）」が有効なとき、その訪問者を計測しません。<strong>既定値</strong>はオンです。</p>
+
+        <h3>訪問者の識別期間（日）</h3>
+        <p><strong>何をするものか</strong>: 同じ訪問者を見分けるための期間を日数で指定します。<strong>既定値</strong>は 365 日で、<strong>入力できる範囲</strong>は 1〜3650 日です。</p>
+
+        <h3>サンプリング（%）</h3>
+        <p><strong>何をするものか</strong>: 訪問者のうち何 % を計測するかを指定します。<strong>既定値</strong>は 100 で、<strong>入力できる範囲</strong>は 1〜100 です。画面には「100 で全件計測。アクセスの多いサイトでは下げるとデータ量を抑えられます。」と表示されます。</p>
+        <div class="callout callout-tip">
+            <p>アクセスが非常に多いサイトでは、サンプリングを 10〜20 などに下げると、データ量と保存の負担を抑えながら傾向をつかめます。小規模なサイトでは 100 のままがおすすめです。</p>
+        </div>
+
+        <h3>生データの保持期間（日）</h3>
+        <p><strong>何をするものか</strong>: 個々の操作を記録した詳しいデータ（生データ）を、何日間保存するかを指定します。<strong>既定値</strong>は 180 日で、<strong>入力できる範囲</strong>は 1〜3650 日です。</p>
+
+        <h3>古い生データを毎日自動で削除する</h3>
+        <p><strong>何をするものか</strong>: 保持期間を過ぎた生データを毎日自動で削除します。<strong>既定値</strong>はオンです。画面には「集計済みのデータはこの期間を過ぎても残ります。」と表示されます。つまり、古い詳しい記録は消えても、集計された数値は残ります。</p>
+
+        <h3>プラグインを削除したときに計測データと設定も消す</h3>
+        <p><strong>何をするものか</strong>: プラグインを削除（アンインストール）したときに、計測データと設定も一緒に消すかどうかを選びます。<strong>既定値</strong>はオンです。画面には「チェックを外すと、削除しても計測データはデータベースに残ります。」と表示されます。</p>
+        <div class="callout callout-warning">
+            <p>この設定をオンにしたままプラグインを削除すると、計測データと設定は消えて元に戻せません。あとでまた使う予定がある場合は、チェックを外しておくとデータが残ります。</p>
+        </div>
+    </section>
+
+    <section>
+        <h2>判定のしきい値</h2>
+        <figure class="screenshot">
+            <img src="images/screenshots/23-settings-thresholds.png" alt="判定のしきい値の設定" class="lightbox-trigger">
+            <figcaption>図: 「判定のしきい値」の設定</figcaption>
+        </figure>
+
+        <h3>レイジクリック</h3>
+        <p><strong>何をするものか</strong>: どのくらいの連打を「レイジクリック」とみなすかの条件を指定します。画面には「同じ場所を [3] 回、[1000] ミリ秒以内に、[30] ピクセル以内で連打したら記録」と表示されます。</p>
+        <p><strong>既定値</strong>: 3 回 / 1000 ミリ秒 / 30 ピクセル</p>
+        <p><strong>入力できる範囲</strong>: 回数は 2〜20、時間は 100〜10000 ミリ秒、範囲は 5〜200 ピクセルです。</p>
+
+        <h3>デッドクリック</h3>
+        <p><strong>何をするものか</strong>: どのくらい反応が無ければ「デッドクリック」とみなすかを指定します。画面には「クリック後 [1000] ミリ秒たっても画面が変わらなければ記録」と表示されます。</p>
+        <p><strong>既定値</strong>: 1000 ミリ秒。<strong>入力できる範囲</strong>は 200〜10000 ミリ秒です。</p>
+
+        <h3>マウスムーブの間隔</h3>
+        <p><strong>何をするものか</strong>: マウスの動きを記録する細かさを指定します。画面には「[250] ミリ秒ごとに記録（大きいほど軽い）／1 回の表示で最大 [300] 件」と表示されます。</p>
+        <p><strong>既定値</strong>: 250 ミリ秒 / 300 件。<strong>入力できる範囲</strong>は間隔が 50〜2000 ミリ秒、最大件数が 10〜2000 件です。</p>
+
+        <h3>計測データの送信間隔</h3>
+        <p><strong>何をするものか</strong>: 記録した操作をどれくらいの間隔でまとめて送信するかを指定します。画面には「[5000] ミリ秒ごとにまとめて送信」と表示されます。</p>
+        <p><strong>既定値</strong>: 5000 ミリ秒。<strong>入力できる範囲</strong>は 1000〜60000 ミリ秒です。</p>
+        <div class="callout callout-note">
+            <p>しきい値は、はじめの設定のままで問題なく使えます。サイトの性質に合わせて調整したい場合だけ変更してください。数字を小さくすると記録が細かくなり、データ量が増えます。</p>
+        </div>
+    </section>
+
+    <section>
+        <h2>ヒートマップの初期表示</h2>
+        <p>ヒートマップ画面を開いたときの、はじめの見え方を決めます。ここで設定した値は、ヒートマップ画面のツールバーで一時的に変えることもできます。</p>
+        <table>
+            <thead>
+                <tr><th style="width:30%;">項目</th><th>内容</th><th style="width:22%;">既定値</th></tr>
+            </thead>
+            <tbody>
+                <tr><td>半径（ピクセル）</td><td>色のにじむ範囲の大きさを指定します。範囲は 5〜120 です。</td><td>28</td></tr>
+                <tr><td>濃さ（%）</td><td>色の濃さを指定します。範囲は 5〜100 です。</td><td>60</td></tr>
+                <tr><td>配色</td><td>色の組み合わせを選びます。選べるのは「サーマル（青→緑→黄→赤）」「ホット」「クール」「Viridis」「モノクロ」です。</td><td>サーマル（青→緑→黄→赤）</td></tr>
+            </tbody>
+        </table>
+    </section>
+
+    <section>
+        <h2>設定を保存</h2>
+        <p>変更した内容を反映するには、ページ下部の「設定を保存」ボタンを押します。保存すると「設定を保存しました。」と表示されます。</p>
+        <figure class="screenshot">
+            <img src="images/screenshots/28-settings-saved.png" alt="設定を保存しましたの通知" class="lightbox-trigger">
+            <figcaption>図: 保存したときに表示される通知</figcaption>
+        </figure>
+        <div class="callout callout-warning">
+            <p>各項目を変更しても、「設定を保存」を押すまでは反映されません。変更したら必ず保存してください。</p>
+        </div>
+    </section>
+
+    <section>
+        <h2>計測データの削除</h2>
+        <figure class="screenshot">
+            <img src="images/screenshots/26-settings-delete.png" alt="計測データの削除" class="lightbox-trigger">
+            <figcaption>図: 「計測データの削除」と赤い削除ボタン</figcaption>
+        </figure>
+        <p><strong>何をするものか</strong>: 保存されている生データと集計データを、すべて削除します。画面には「保存されている生データ・集計データをすべて削除します。元に戻せません。」と表示されます。</p>
+        <p><strong>操作手順</strong>: 「計測データをすべて削除」ボタンを押すと、確認のダイアログが表示されます。内容を確認して実行すると削除され、「計測データをすべて削除しました。」と表示されます。</p>
+        <p><strong>確認ダイアログの文言</strong>: 「計測データをすべて削除します。よろしいですか？ この操作は元に戻せません。」</p>
+        <div class="callout callout-warning">
+            <p>この操作は元に戻せません。削除すると、それまでのクリックやスクロールのデータはすべて無くなります。実行する前に、本当に必要かどうかを確認してください。</p>
+        </div>
+    </section>
+
+    <section>
+        <h2>使い方</h2>
+        <figure class="screenshot">
+            <img src="images/screenshots/27-settings-help.png" alt="使い方の手順" class="lightbox-trigger">
+            <figcaption>図: 「使い方」に表示される手順</figcaption>
+        </figure>
+        <p>設定画面のいちばん下には「使い方」として、はじめにやることが手順でまとめられています。はじめて使うときは、ここに書かれたとおりに進めると、データが表示されるまでたどり着けます。</p>
+        <div class="callout callout-tip">
+            <p>設定で迷ったときは、まずこの「使い方」を確認してください。計測の開始からデータの確認までの流れが順番に説明されています。</p>
+        </div>
+    </section>
+
+    <nav class="page-nav">
+        <a href="dashboard.html" class="prev">&laquo; ダッシュボード画面</a>
+        <a href="troubleshooting.html" class="next">トラブルシューティング &raquo;</a>
+    </nav>
+
+    <footer class="manual-footer">
+        <p>作者: <a href="https://www.tsuyoshikashiwazaki.jp/profile/" target="_blank" rel="noopener">柏崎剛（Tsuyoshi Kashiwazaki）</a></p>
+        <p>プラグイン: Kashiwazaki SEO Heatmap v1.0.0 | <a href="https://github.com/TsuyoshiKashiwazaki/wp-plugin-kashiwazaki-seo-heatmap" target="_blank" rel="noopener">GitHub</a></p>
+    </footer>
+</main>
+
+<div class="lightbox"></div>
+<script src="js/manual.js"></script>
+</body>
+</html>

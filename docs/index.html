@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>概要 - Kashiwazaki SEO Heatmap マニュアル</title>
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+<button class="hamburger-btn" aria-label="メニューを開く">&#9776;</button>
+
+<nav class="sidebar">
+    <div class="sidebar-header">
+        <h2 style="color:#fff;">Kashiwazaki SEO Heatmap</h2>
+        <span class="version">v1.0.0</span>
+        <img src="images/main-visual.png" alt="" style="width:100%;border-radius:4px;margin-top:8px;">
+    </div>
+    <ul>
+        <li><a href="index.html">概要</a></li>
+        <li><a href="setup.html">インストール・初期設定</a></li>
+        <li><a href="heatmap.html">ヒートマップ画面</a></li>
+        <li><a href="dashboard.html">ダッシュボード画面</a></li>
+        <li><a href="settings.html">設定画面</a></li>
+        <li><a href="troubleshooting.html">トラブルシューティング</a></li>
+    </ul>
+</nav>
+
+<main class="content">
+    <h1>Kashiwazaki SEO Heatmap マニュアル</h1>
+    <img src="images/main-visual.png" alt="Kashiwazaki SEO Heatmap メインビジュアル" style="width:100%;border-radius:8px;margin-bottom:24px;">
+
+    <p class="lead">WordPress の投稿・固定ページ・カスタム投稿で「どこがクリックされているか」を、実際のページの上に色で重ねて表示するヒートマップ解析プラグインです。</p>
+
+    <p>本プラグインは、設定画面でチェックを入れた投稿タイプのページだけを対象に、訪問者のクリック・スクロール・マウスの動きを記録します。記録したデータは、クリックの集中している場所を示すヒートマップ、押された要素のランキング、スクロール到達率、サイト全体のダッシュボードとして管理画面に表示されます。座標だけでなく「どのリンク・どのボタンが押されたか」まで要素ごとに数えるのが特徴で、ページの改善点を具体的に探せます。個人を特定する情報は保存せず、IP アドレスも記録しません。</p>
+
+    <div class="feature-cards">
+        <div class="feature-card">
+            <h3>クリックヒートマップ</h3>
+            <p>ページのどこが押されているかを、実際のページの上に色で重ねて表示します。赤いほどよく押されている場所です。</p>
+        </div>
+        <div class="feature-card">
+            <h3>要素ごとの集計</h3>
+            <p>座標だけでなく「どのリンク・どのボタンが押されたか」を要素ごとに数え、回数順に一覧表示します。CSV で書き出せます。</p>
+        </div>
+        <div class="feature-card">
+            <h3>行動の可視化</h3>
+            <p>スクロール到達率、レイジクリック、デッドクリック、外部リンクのクリックを検出し、つまずきや離脱の箇所を探せます。</p>
+        </div>
+    </div>
+
+    <section>
+        <h2>SEO / GEO における強み</h2>
+        <p>本プラグインは SEO / GEO 支援を目的とした kashiwazaki シリーズのひとつです。実際に計測できる行動データを通じて、サイト改善の判断材料を提供します。</p>
+
+        <h3>クリック行動を根拠にした改善</h3>
+        <p>「どの場所がよく押されているか」「どのリンクは押されていないか」を実際のデータで確認できます。勘ではなく、実際のクリックの分布をもとに、リンクやボタンの配置を見直す材料になります。検索順位への影響は検索エンジン側の判断によるため断定はできませんが、クリックされにくい導線に気づけることは、回遊や目的達成の改善に役立ちます。</p>
+
+        <h3>レイジクリック・デッドクリックの検出</h3>
+        <p>同じ場所を短時間に連打する「レイジクリック」と、押しても何も起きない「デッドクリック」を検出します。これらは、反応しないボタンや期待どおりに動かないリンクがあるサインであることが多く、離脱や直帰につながりかねません。早い段階で気づくための手がかりになります。</p>
+
+        <h3>表示速度への影響を抑えた設計</h3>
+        <p>フロント側で読み込むのは計測用の JavaScript 1 本だけで、実測 <strong>22,907 バイト</strong>（gzip 圧縮で <strong>7,579 バイト</strong>）です。フロント側で CSS は読み込まず、管理画面用のファイルも一般のページには読み込まれません。アクセスの多いサイトでは、あとで説明する「サンプリング」（何 % の訪問者を計測するか）を下げてデータ量を抑えられます。これらの事実から、ページ速度を低下させない設計になっています。</p>
+
+        <h3>プライバシーに配慮したデータの扱い</h3>
+        <p>IP アドレスは保存しません（除外の判定にのみ使い、データベースには残しません）。訪問者の識別には、ブラウザの Cookie に保存したランダムな文字列だけを使います。ブラウザの「追跡しない（Do Not Track）」設定を尊重でき、ログイン中のユーザーや特定の権限グループも計測から除外できます。個人を特定しにくい形で行動データを扱えるため、プライバシーに配慮した運用の助けになります。</p>
+    </section>
+
+    <figure class="infographic">
+        <img src="images/infographics/overview-flow.png" alt="プラグインの全体ワークフロー">
+        <figcaption>図: ページの閲覧から管理画面での確認までの流れ</figcaption>
+    </figure>
+
+    <section>
+        <h2>目次</h2>
+        <table>
+            <thead>
+                <tr>
+                    <th style="width:35%;">ページ</th>
+                    <th>内容</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td><a href="index.html">概要</a></td>
+                    <td>プラグインの目的・主要機能・SEO / GEO における強み・動作要件</td>
+                </tr>
+                <tr>
+                    <td><a href="setup.html">インストール・初期設定</a></td>
+                    <td>インストール手順、管理メニューの場所、計測を始めるまでの初期設定</td>
+                </tr>
+                <tr>
+                    <td><a href="heatmap.html">ヒートマップ画面</a></td>
+                    <td>ページ・期間・端末の選び方、表示するデータの種類、色の見方、要素ランキング、CSV 書き出し</td>
+                </tr>
+                <tr>
+                    <td><a href="dashboard.html">ダッシュボード画面</a></td>
+                    <td>サイト全体の指標カード、日別の推移グラフ、よく見られているページ一覧</td>
+                </tr>
+                <tr>
+                    <td><a href="settings.html">設定画面</a></td>
+                    <td>計測する対象、除外する条件、プライバシーとデータの保持、判定のしきい値、表示の初期値、データの削除</td>
+                </tr>
+                <tr>
+                    <td><a href="troubleshooting.html">トラブルシューティング</a></td>
+                    <td>データが出ないときの確認、よくある問題と対処、動作要件</td>
+                </tr>
+            </tbody>
+        </table>
+    </section>
+
+    <section>
+        <h2>動作要件</h2>
+        <table>
+            <thead>
+                <tr>
+                    <th style="width:35%;">項目</th>
+                    <th>要件</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr><td>WordPress</td><td>6.0 以上</td></tr>
+                <tr><td>PHP</td><td>7.4 以上</td></tr>
+                <tr><td>対応ブラウザ</td><td>Chrome / Firefox / Safari / Edge の各最新版</td></tr>
+                <tr><td>管理画面の権限</td><td>管理者（設定の変更とヒートマップの閲覧に必要）</td></tr>
+                <tr><td>必要な機能</td><td>WordPress の標準機能のみ。外部サービスへの接続は不要です</td></tr>
+            </tbody>
+        </table>
+    </section>
+
+    <div class="callout callout-tip">
+        <p>すぐに使い始めたい場合は、<a href="setup.html">インストール・初期設定</a>ページに進んでください。各画面の細かい使い方は、<a href="heatmap.html">ヒートマップ画面</a>・<a href="dashboard.html">ダッシュボード画面</a>・<a href="settings.html">設定画面</a>の各ページで解説しています。</p>
+    </div>
+
+    <div class="callout callout-note">
+        <p>データの集計には少し時間がかかります。計測はページを閲覧した時点で自動的に始まり、クリックやスクロールが一定の間隔でまとめて送信されます。送信された内容は集計され、ヒートマップ画面やダッシュボード画面に反映されます。</p>
+    </div>
+
+    <nav class="page-nav">
+        <span></span>
+        <a href="setup.html" class="next">インストール・初期設定 &raquo;</a>
+    </nav>
+
+    <footer class="manual-footer">
+        <p>作者: <a href="https://www.tsuyoshikashiwazaki.jp/profile/" target="_blank" rel="noopener">柏崎剛（Tsuyoshi Kashiwazaki）</a></p>
+        <p>プラグイン: Kashiwazaki SEO Heatmap v1.0.0 | <a href="https://github.com/TsuyoshiKashiwazaki/wp-plugin-kashiwazaki-seo-heatmap" target="_blank" rel="noopener">GitHub</a></p>
+    </footer>
+</main>
+
+<div class="lightbox"></div>
+<script src="js/manual.js"></script>
+</body>
+</html>

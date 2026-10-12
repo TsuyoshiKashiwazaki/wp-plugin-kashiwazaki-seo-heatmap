@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ダッシュボード画面 - Kashiwazaki SEO Heatmap マニュアル</title>
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+<button class="hamburger-btn" aria-label="メニューを開く">&#9776;</button>
+
+<nav class="sidebar">
+    <div class="sidebar-header">
+        <h2 style="color:#fff;">Kashiwazaki SEO Heatmap</h2>
+        <span class="version">v1.0.0</span>
+        <img src="images/main-visual.png" alt="" style="width:100%;border-radius:4px;margin-top:8px;">
+    </div>
+    <ul>
+        <li><a href="index.html">概要</a></li>
+        <li><a href="setup.html">インストール・初期設定</a></li>
+        <li><a href="heatmap.html">ヒートマップ画面</a></li>
+        <li><a href="dashboard.html">ダッシュボード画面</a></li>
+        <li><a href="settings.html">設定画面</a></li>
+        <li><a href="troubleshooting.html">トラブルシューティング</a></li>
+    </ul>
+</nav>
+
+<main class="content">
+    <h1>ダッシュボード画面</h1>
+    <p class="lead">サイト全体の閲覧数・クリック数などの集計を、1 つの画面でまとめて確認できます。</p>
+
+    <p>この画面は、サイト全体を対象にした集計を表示します。個別のページを見たいときは「ヒートマップ画面」を使います。ダッシュボードでは、まず全体の傾向をつかみ、気になるページをヒートマップで詳しく見る、という流れが便利です。</p>
+
+    <figure class="screenshot">
+        <img src="images/screenshots/10-dashboard.png" alt="ダッシュボード画面の全体" class="lightbox-trigger">
+        <figcaption>図: ダッシュボード画面の全体。上部に指標カード、下に日別の推移とページ一覧があります。</figcaption>
+    </figure>
+
+    <section>
+        <h2>集計の対象期間</h2>
+        <p>見出しの下に、集計している期間が「（開始日）〜（終了日）（30 日間）の集計です。」の形で表示されます。この画面では直近 30 日間を集計します。個別の期間を指定したいときはヒートマップ画面を使ってください。</p>
+
+        <div class="callout callout-warning">
+            <p>計測対象の投稿タイプがまだ選ばれていないときは、上部に「計測対象の投稿タイプがまだ選ばれていません。「設定」で投稿・固定ページ・カスタム投稿にチェックを入れると計測が始まります。」という警告が表示され、あわせて「設定を開く」のリンクが表示されます。この場合はまず設定画面で計測対象を選んでください。</p>
+        </div>
+    </section>
+
+    <section>
+        <h2>指標カードの見方</h2>
+        <figure class="screenshot">
+            <img src="images/screenshots/11-dashboard-summary.png" alt="ダッシュボード画面の指標カード" class="lightbox-trigger">
+            <figcaption>図: サイト全体の 7 つの指標</figcaption>
+        </figure>
+        <table>
+            <thead>
+                <tr><th style="width:40%;">指標</th><th>意味</th></tr>
+            </thead>
+            <tbody>
+                <tr><td>閲覧数</td><td>サイト全体でページが表示された回数です。</td></tr>
+                <tr><td>訪問者数</td><td>サイトを見た訪問者の数です。同じ訪問者が何度来ても 1 人として数えます。</td></tr>
+                <tr><td>クリック数</td><td>サイト全体で行われたクリックの合計です。</td></tr>
+                <tr><td>平均滞在時間（秒）</td><td>訪問者がページにいた時間の平均（秒）です。</td></tr>
+                <tr><td>レイジクリック</td><td>同じ場所を短時間に連打した回数です。数が多いときは、反応しない場所に気づかず押している人が多い可能性があります。</td></tr>
+                <tr><td>デッドクリック</td><td>押しても何も起きなかった回数です。数が多いときは、押せるように見えて押しても反応しない要素があるサインのことがあります。</td></tr>
+                <tr><td>外部リンクのクリック</td><td>外部サイトへのリンクが押された回数です。</td></tr>
+            </tbody>
+        </table>
+        <div class="callout callout-tip">
+            <p>「レイジクリック」と「デッドクリック」は、ほかの指標と違う色で目立つように表示されます。この 2 つの数値が大きいときは、ヒートマップ画面で「表示するデータ」を該当する種類に切り替えて、どの場所で起きているかを確認すると原因を探しやすくなります。</p>
+        </div>
+    </section>
+
+    <section>
+        <h2>日別の推移</h2>
+        <figure class="screenshot">
+            <img src="images/screenshots/12-dashboard-chart.png" alt="日別の推移の折れ線グラフ" class="lightbox-trigger">
+            <figcaption>図: 日別の推移（折れ線グラフ）</figcaption>
+        </figure>
+        <p>閲覧数とクリック数の日ごとの変化を折れ線グラフで表示します。グラフの凡例は「閲覧数」と「クリック数」の 2 つです。</p>
+        <ul>
+            <li>特定の日だけ数値が跳ね上がっていれば、その日に何か話題になった可能性があります。</li>
+            <li>閲覧数は増えているのにクリック数が増えていないときは、訪問者が目的の場所を見つけにくいのかもしれません。</li>
+        </ul>
+    </section>
+
+    <section>
+        <h2>よく見られているページ</h2>
+        <figure class="screenshot">
+            <img src="images/screenshots/13-dashboard-pages.png" alt="よく見られているページの一覧" class="lightbox-trigger">
+            <figcaption>図: よく見られているページの一覧</figcaption>
+        </figure>
+        <table>
+            <thead>
+                <tr><th style="width:40%;">列</th><th>意味</th></tr>
+            </thead>
+            <tbody>
+                <tr><td>ページ</td><td>ページのタイトルです。</td></tr>
+                <tr><td>閲覧数</td><td>そのページが表示された回数です。</td></tr>
+                <tr><td>訪問者数</td><td>そのページを見た訪問者の数です。</td></tr>
+                <tr><td>平均滞在時間（秒）</td><td>そのページにいた時間の平均（秒）です。</td></tr>
+                <tr><td>ヒートマップ</td><td>そのページのヒートマップ画面へ移動するボタンです。</td></tr>
+            </tbody>
+        </table>
+        <p><strong>「ヒートマップを見る」ボタン</strong>: 一覧の中のこのボタンを押すと、そのページを選んだ状態のヒートマップ画面へ移動します。「数字は大きいのに、なぜかクリックが少ない」といったページを、そのまま詳しく調べられます。</p>
+        <div class="callout callout-note">
+            <p>まだデータが無いときは、一覧に「まだデータがありません。」と表示されます。</p>
+        </div>
+    </section>
+
+    <figure class="infographic">
+        <img src="images/infographics/dashboard-reading.png" alt="ダッシュボードの指標とグラフの読み方">
+        <figcaption>図: ダッシュボードの 7 つの指標・推移グラフ・ページ一覧の関係</figcaption>
+    </figure>
+
+    <section>
+        <h2>うまく使うコツ</h2>
+        <ol>
+            <li>まずダッシュボードで全体の傾向をつかみます。</li>
+            <li>「よく見られているページ」で気になるページを見つけます。</li>
+            <li>そのページの行にある「ヒートマップを見る」を押して、詳しく確認します。</li>
+        </ol>
+        <div class="callout callout-tip">
+            <p>数値は日々少しずつ変わります。1 日の数字だけで判断せず、しばらく見て傾向をつかむと、改善すべき場所が見つけやすくなります。</p>
+        </div>
+    </section>
+
+    <nav class="page-nav">
+        <a href="heatmap.html" class="prev">&laquo; ヒートマップ画面</a>
+        <a href="settings.html" class="next">設定画面 &raquo;</a>
+    </nav>
+
+    <footer class="manual-footer">
+        <p>作者: <a href="https://www.tsuyoshikashiwazaki.jp/profile/" target="_blank" rel="noopener">柏崎剛（Tsuyoshi Kashiwazaki）</a></p>
+        <p>プラグイン: Kashiwazaki SEO Heatmap v1.0.0 | <a href="https://github.com/TsuyoshiKashiwazaki/wp-plugin-kashiwazaki-seo-heatmap" target="_blank" rel="noopener">GitHub</a></p>
+    </footer>
+</main>
+
+<div class="lightbox"></div>
+<script src="js/manual.js"></script>
+</body>
+</html>

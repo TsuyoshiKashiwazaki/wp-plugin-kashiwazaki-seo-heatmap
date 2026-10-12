@@ -1,0 +1,269 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ヒートマップ画面 - Kashiwazaki SEO Heatmap マニュアル</title>
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+<button class="hamburger-btn" aria-label="メニューを開く">&#9776;</button>
+
+<nav class="sidebar">
+    <div class="sidebar-header">
+        <h2 style="color:#fff;">Kashiwazaki SEO Heatmap</h2>
+        <span class="version">v1.0.0</span>
+        <img src="images/main-visual.png" alt="" style="width:100%;border-radius:4px;margin-top:8px;">
+    </div>
+    <ul>
+        <li><a href="index.html">概要</a></li>
+        <li><a href="setup.html">インストール・初期設定</a></li>
+        <li><a href="heatmap.html">ヒートマップ画面</a></li>
+        <li><a href="dashboard.html">ダッシュボード画面</a></li>
+        <li><a href="settings.html">設定画面</a></li>
+        <li><a href="troubleshooting.html">トラブルシューティング</a></li>
+    </ul>
+</nav>
+
+<main class="content">
+    <h1>ヒートマップ画面</h1>
+    <p class="lead">計測したいページを選ぶと、そのページのどこがクリックされているかをヒートマップで確認できます。</p>
+
+    <p>この画面では、1 つのページを選んで、その上にクリックの分布を色で重ねて表示します。座標のほかに、押された要素の一覧や、スクロールの到達率も見られます。表示する条件は上部のツールバーで切り替えます。</p>
+
+    <figure class="screenshot">
+        <img src="images/screenshots/01-heatmap-page.png" alt="ヒートマップ画面の全体" class="lightbox-trigger">
+        <figcaption>図: ヒートマップ画面の全体。上部が条件を選ぶツールバー、中央がプレビュー、右側が指標と一覧です。</figcaption>
+    </figure>
+
+    <section>
+        <h2>画面の地図</h2>
+        <p>この画面は大きく 4 つの領域に分かれています。</p>
+        <table>
+            <thead>
+                <tr>
+                    <th style="width:12%;">番号</th>
+                    <th style="width:28%;">領域</th>
+                    <th>内容</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr><td>①</td><td>ツールバー</td><td>ページの選びかた、期間・端末・データの種類・表示方法などの条件を選びます。</td></tr>
+                <tr><td>②</td><td>指標カード</td><td>閲覧数・訪問者数・クリック数・平均滞在時間・平均スクロールの 5 つの数値を表示します。</td></tr>
+                <tr><td>③</td><td>プレビュー</td><td>選んだページをそのまま表示し、クリックのヒートマップを重ねます。</td></tr>
+                <tr><td>④</td><td>右側の一覧</td><td>スクロール到達率のグラフと、よくクリックされている要素の一覧を表示します。</td></tr>
+            </tbody>
+        </table>
+    </section>
+
+    <section>
+        <h2>ツールバーの各項目</h2>
+        <figure class="screenshot">
+            <img src="images/screenshots/02-heatmap-toolbar.png" alt="ヒートマップ画面のツールバー" class="lightbox-trigger">
+            <figcaption>図: ツールバー。左からページの選択、絞り込み、期間・端末・データの種類などが並びます。</figcaption>
+        </figure>
+
+        <h3>計測済みページ</h3>
+        <p><strong>何をするものか</strong>: すでにデータが集まっているページの中から、表示したいページを選びます。</p>
+        <p><strong>いつ使うか</strong>: どのページを見るか決まっているときに使います。「<strong>タイトル（閲覧数 閲覧）</strong>」の形で並び、閲覧数の多い順に表示されます。はじめは「— 選択してください —」が選ばれています。</p>
+
+        <h3>投稿から選ぶ（絞り込み）</h3>
+        <p><strong>何をするものか</strong>: まだデータが少ないページを選ぶときに、タイトルの一部を入力して候補を絞り込みます。</p>
+        <p><strong>操作手順</strong>: 入力欄にタイトルの一部を入力すると、すぐ下の「（投稿を選択）」の候補が絞られます。</p>
+
+        <h3>（投稿を選択）</h3>
+        <p><strong>何をするものか</strong>: 絞り込んだ候補の中から、表示したい投稿を選びます。「<strong>[投稿タイプ] タイトル</strong>」の形で表示されます。選ぶと、そのページがプレビューに読み込まれます。</p>
+
+        <h3>投稿ID</h3>
+        <p><strong>何をするものか</strong>: タイトルではなく投稿 ID を直接指定してページを選ぶ方法です。</p>
+        <p><strong>入力できる範囲</strong>: 半角の数値です。はじめは「0」で、0 のときは何も選ばれていません。</p>
+
+        <div class="callout callout-tip">
+            <p>「計測済みページ」「投稿から選ぶ」「投稿ID」は、どれか 1 つでページを選べば十分です。データがあるページを見たいときは「計測済みページ」、まだデータがないページを開いて動きを見たいときは「投稿から選ぶ」が便利です。</p>
+        </div>
+
+        <h3>期間</h3>
+        <p><strong>何をするものか</strong>: どのくらい前までのデータを集計するかを選びます。</p>
+        <p><strong>既定値</strong>: 過去 30 日</p>
+        <table>
+            <thead>
+                <tr><th style="width:40%;">選択肢</th><th>集計される範囲</th></tr>
+            </thead>
+            <tbody>
+                <tr><td>今日</td><td>今日 1 日分だけを集計します。</td></tr>
+                <tr><td>過去 7 日</td><td>直近 7 日分を集計します。</td></tr>
+                <tr><td>過去 30 日</td><td>直近 30 日分を集計します（既定）。</td></tr>
+                <tr><td>過去 90 日</td><td>直近 90 日分を集計します。</td></tr>
+                <tr><td>過去 180 日</td><td>直近 180 日分を集計します。</td></tr>
+                <tr><td>過去 1 年</td><td>直近 1 年分を集計します。</td></tr>
+            </tbody>
+        </table>
+
+        <h3>端末</h3>
+        <p><strong>何をするものか</strong>: パソコン・スマートフォンなど、どの端末のデータを見るかを選びます。</p>
+        <p><strong>既定値</strong>: すべて</p>
+        <table>
+            <thead>
+                <tr><th style="width:40%;">選択肢</th><th>表示されるデータ</th></tr>
+            </thead>
+            <tbody>
+                <tr><td>すべて</td><td>すべての端末のデータを合わせて表示します（既定）。</td></tr>
+                <tr><td>PC</td><td>パソコンのデータだけを表示します。</td></tr>
+                <tr><td>タブレット</td><td>タブレットのデータだけを表示します。</td></tr>
+                <tr><td>スマートフォン</td><td>スマートフォンのデータだけを表示します。</td></tr>
+            </tbody>
+        </table>
+
+        <h3>表示するデータ</h3>
+        <p><strong>何をするものか</strong>: プレビューに重ねるデータの種類を選びます。</p>
+        <p><strong>既定値</strong>: クリック</p>
+        <table>
+            <thead>
+                <tr><th style="width:40%;">選択肢</th><th>意味と用途</th></tr>
+            </thead>
+            <tbody>
+                <tr><td>クリック</td><td>ふつうのクリックの分布を表示します（既定）。</td></tr>
+                <tr><td>レイジクリック</td><td>同じ場所を短時間に連打した箇所を表示します。</td></tr>
+                <tr><td>デッドクリック</td><td>押しても何も起きなかった箇所を表示します。</td></tr>
+                <tr><td>外部リンク</td><td>外部サイトへのリンクを押した箇所を表示します。</td></tr>
+                <tr><td>マウスムーブ</td><td>マウスが動いた範囲の分布を表示します。「計測する項目」で記録を有効にしている場合に使えます。</td></tr>
+                <tr><td>スクロール到達率</td><td>どこまでスクロールされたかを表示します。</td></tr>
+            </tbody>
+        </table>
+        <div class="callout callout-note">
+            <p>「マウスムーブ」は、設定画面の「計測する項目」で記録をオンにしていないとデータがありません。はじめはオフになっています。</p>
+        </div>
+
+        <h3>描画方法</h3>
+        <p><strong>何をするものか</strong>: クリックを「色のぼかし」で表すか、「点」で表すかを選びます。</p>
+        <p><strong>既定値</strong>: ヒート（ぼかし）</p>
+        <table>
+            <thead>
+                <tr><th style="width:40%;">選択肢</th><th>見え方</th></tr>
+            </thead>
+            <tbody>
+                <tr><td>ヒート（ぼかし）</td><td>色の広がりで密度を表します。全体的な傾向をつかむのに向いています（既定）。</td></tr>
+                <tr><td>ポイント（点）</td><td>1 件ずつ点で表します。クリックの位置を正確に見たいときに使います。</td></tr>
+            </tbody>
+        </table>
+        <figure class="screenshot">
+            <img src="images/screenshots/06-heatmap-points.png" alt="ポイント（点）で表示したヒートマップ" class="lightbox-trigger">
+            <figcaption>図: 「ポイント（点）」で表示した例</figcaption>
+        </figure>
+
+        <h3>半径</h3>
+        <p><strong>何をするものか</strong>: 色のにじむ範囲の大きさを変えます。<strong>入力できる範囲</strong>は 5〜120 で、はじめは 28 です。数値が大きいほど、広い範囲に色が広がります。</p>
+
+        <h3>濃さ</h3>
+        <p><strong>何をするものか</strong>: 色の濃さを変えます。<strong>入力できる範囲</strong>は 5〜100 で、はじめは 60 です。</p>
+
+        <h3>配色</h3>
+        <p><strong>何をするものか</strong>: 色の組み合わせを選びます。</p>
+        <p><strong>既定値</strong>: サーマル（青→緑→黄→赤）</p>
+        <table>
+            <thead>
+                <tr><th style="width:40%;">選択肢</th><th>色の印象</th></tr>
+            </thead>
+            <tbody>
+                <tr><td>サーマル（青→緑→黄→赤）</td><td>青から赤へ変化します。密度が高いほど赤くなります（既定）。</td></tr>
+                <tr><td>ホット</td><td>暖色系で表します。</td></tr>
+                <tr><td>クール</td><td>寒色系で表します。</td></tr>
+                <tr><td>Viridis</td><td>紫から黄へ変化します。色の見分けがつきやすい配色です。</td></tr>
+                <tr><td>モノクロ</td><td>白黒の濃淡で表します。印刷や白黒画面で見やすい配色です。</td></tr>
+            </tbody>
+        </table>
+
+        <h3>表示を更新</h3>
+        <p><strong>何をするものか</strong>: ツールバーで選んだ条件を反映して、プレビューと指標を描き直します。条件を変えたらこのボタンを押してください。</p>
+
+        <h3>CSV 書き出し</h3>
+        <p><strong>何をするものか</strong>: 「よくクリックされている要素」の一覧を、CSV ファイルとしてパソコンに保存します。表計算ソフトで開いて、並べ替えや集計に使えます。</p>
+
+        <h3>プレビュー幅（PC / タブレット / スマートフォン）</h3>
+        <p><strong>何をするものか</strong>: プレビューの幅を、パソコン・タブレット・スマートフォンの大きさに切り替えます。<strong>既定値</strong>は PC です。スマートフォンの見え方を確かめたいときに使います。</p>
+
+        <h3>ページをそのまま操作する（ヒートマップを隠す）</h3>
+        <p><strong>何をするものか</strong>: チェックを入れるとヒートマップを非表示にして、プレビューの中のリンクやボタンを実際に操作できます。プレビューはそのままでは操作できません。リンク先を確かめたいときに一時的に使います。<strong>既定値</strong>はオフです。</p>
+
+        <h3>URL 欄</h3>
+        <p><strong>何をするものか</strong>: プレビューしているページの URL を表示します。表示だけの欄で、直接入力はしません。ページを選ぶと自動で入ります。</p>
+    </section>
+
+    <section>
+        <h2>指標カードの見方</h2>
+        <figure class="screenshot">
+            <img src="images/screenshots/03-heatmap-summary.png" alt="ヒートマップ画面の指標カード" class="lightbox-trigger">
+            <figcaption>図: 選んだページの 5 つの指標</figcaption>
+        </figure>
+        <table>
+            <thead>
+                <tr><th style="width:40%;">指標</th><th>意味</th></tr>
+            </thead>
+            <tbody>
+                <tr><td>閲覧数</td><td>選んだ期間に、そのページが表示された回数です。</td></tr>
+                <tr><td>訪問者数</td><td>そのページを見た訪問者の数です。同じ訪問者が何度来ても 1 人として数えます。</td></tr>
+                <tr><td>クリック数</td><td>そのページで行われたクリックの合計です。</td></tr>
+                <tr><td>平均滞在時間（秒）</td><td>訪問者がそのページにいた時間の平均（秒）です。</td></tr>
+                <tr><td>平均スクロール（%）</td><td>ページのどのくらいの高さまで見られたかの平均です。100% に近いほど、最後まで見られています。</td></tr>
+            </tbody>
+        </table>
+    </section>
+
+    <section>
+        <h2>スクロール到達率と要素ランキング</h2>
+        <figure class="screenshot">
+            <img src="images/screenshots/04-heatmap-side.png" alt="スクロール到達率グラフとよくクリックされている要素" class="lightbox-trigger">
+            <figcaption>図: スクロール到達率のグラフ（上）と、よくクリックされている要素の一覧（下）</figcaption>
+        </figure>
+
+        <h3>スクロール到達率</h3>
+        <p>ページの各位置まで、訪問者の何 % がスクロールして到達したかを示します。上のほうは多くの人が見ていても、下のほうになるほど到達率は下がるのがふつうです。到達率が大きく下がる位置は、そのあたりで多くの人が離れている可能性があります。</p>
+
+        <h3>よくクリックされている要素</h3>
+        <p>そのページで押されたリンクやボタンを、回数の多い順に一覧にします。</p>
+        <table>
+            <thead>
+                <tr><th style="width:40%;">列</th><th>意味</th></tr>
+            </thead>
+            <tbody>
+                <tr><td>要素</td><td>押されたリンク・ボタンの内容です。</td></tr>
+                <tr><td>回数</td><td>押された回数です。</td></tr>
+            </tbody>
+        </table>
+        <div class="callout callout-note">
+            <p>データをまだ読み込んでいないときは、要素の一覧に「データを読み込むと表示されます。」と表示されます。</p>
+        </div>
+    </section>
+
+    <figure class="infographic">
+        <img src="images/infographics/heatmap-reading.png" alt="ヒートマップの6種類のデータの見分けかた">
+        <figcaption>図: 表示するデータの種類と、それぞれで分かること</figcaption>
+    </figure>
+
+    <section>
+        <h2>データがまだ無いとき</h2>
+        <p>まだどのページにもデータが無いときは、次のように表示されます。対象のページを実際に閲覧すると、数秒後にデータが現れます。</p>
+        <figure class="screenshot">
+            <img src="images/screenshots/05-heatmap-empty.png" alt="データがまだ無いときの表示" class="lightbox-trigger">
+            <figcaption>図: データがまだ無いときの表示</figcaption>
+        </figure>
+        <div class="callout callout-warning">
+            <p>「まだデータがありません。投稿を開いて少し操作すると、数秒後にデータが表示されます。」と出るときは、次の 3 つを確かめてください。（1）計測する投稿タイプが選ばれているか、（2）対象ページを実際に閲覧したか、（3）閲覧したのが計測から除外されるユーザー（ログイン中の管理者など）ではないか。</p>
+        </div>
+    </section>
+
+    <nav class="page-nav">
+        <a href="setup.html" class="prev">&laquo; インストール・初期設定</a>
+        <a href="dashboard.html" class="next">ダッシュボード画面 &raquo;</a>
+    </nav>
+
+    <footer class="manual-footer">
+        <p>作者: <a href="https://www.tsuyoshikashiwazaki.jp/profile/" target="_blank" rel="noopener">柏崎剛（Tsuyoshi Kashiwazaki）</a></p>
+        <p>プラグイン: Kashiwazaki SEO Heatmap v1.0.0 | <a href="https://github.com/TsuyoshiKashiwazaki/wp-plugin-kashiwazaki-seo-heatmap" target="_blank" rel="noopener">GitHub</a></p>
+    </footer>
+</main>
+
+<div class="lightbox"></div>
+<script src="js/manual.js"></script>
+</body>
+</html>
