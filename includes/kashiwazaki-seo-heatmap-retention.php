@@ -19,6 +19,23 @@ if ( ! defined( 'ABSPATH' ) ) {
 function kashiwazaki_seo_heatmap_run_cleanup() {
 	global $wpdb;
 
+	// 送信のまとまりの番号は、計測スクリプトがブラウザに残して送り直す期間（7 日）を
+	// 過ぎたら要らないので、自動削除の設定によらず 8 日より古いものを消す。
+	$batches = kashiwazaki_seo_heatmap_table( 'batches' );
+	// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
+	$wpdb->query(
+		$wpdb->prepare(
+			// phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared -- テーブル名はプレフィックス付きの固定値。
+			"DELETE FROM {$batches} WHERE created_at < %s",
+			gmdate( 'Y-m-d H:i:s', time() - 8 * DAY_IN_SECONDS )
+		)
+	);
+
+	// 表の変換が済んでいないのに予約が無ければ、入れ直す（予約の実行が失敗して消えた場合）。
+	if ( ! kashiwazaki_seo_heatmap_tables_transactional() && ! wp_next_scheduled( 'kashiwazaki_seo_heatmap_convert_event' ) ) {
+		wp_schedule_single_event( time(), 'kashiwazaki_seo_heatmap_convert_event' );
+	}
+
 	$settings = kashiwazaki_seo_heatmap_get_settings();
 	if ( empty( $settings['enable_auto_cleanup'] ) ) {
 		return 0;

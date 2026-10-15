@@ -109,14 +109,14 @@ class Kashiwazaki_SEO_Heatmap_Admin {
 			'kashiwazaki-seo-heatmap-admin',
 			KASHIWAZAKI_SEO_HEATMAP_PLUGIN_URL . 'assets/css/kashiwazaki-seo-heatmap-admin.css',
 			array(),
-			KASHIWAZAKI_SEO_HEATMAP_VERSION
+			kashiwazaki_seo_heatmap_asset_version( 'assets/css/kashiwazaki-seo-heatmap-admin.css' )
 		);
 
 		wp_enqueue_script(
 			'kashiwazaki-seo-heatmap-admin',
 			KASHIWAZAKI_SEO_HEATMAP_PLUGIN_URL . 'assets/js/kashiwazaki-seo-heatmap-admin.js',
 			array(),
-			KASHIWAZAKI_SEO_HEATMAP_VERSION,
+			kashiwazaki_seo_heatmap_asset_version( 'assets/js/kashiwazaki-seo-heatmap-admin.js' ),
 			true
 		);
 
@@ -148,6 +148,11 @@ class Kashiwazaki_SEO_Heatmap_Admin {
 					'viewport'  => __( '表示範囲', 'wp-plugin-kashiwazaki-seo-heatmap' ),
 					'times'     => __( '回', 'wp-plugin-kashiwazaki-seo-heatmap' ),
 					'visitors'  => __( '訪問者', 'wp-plugin-kashiwazaki-seo-heatmap' ),
+					'visitorsLabel' => __( '訪問者数', 'wp-plugin-kashiwazaki-seo-heatmap' ),
+					'unsavedLeave' => __( '保存していない変更があります。このまま移動しますか？', 'wp-plugin-kashiwazaki-seo-heatmap' ),
+					/* translators: %d: 生データの保持日数。 */
+					'visitorsLimited' => __( '訪問者数（直近 %d 日）', 'wp-plugin-kashiwazaki-seo-heatmap' ),
+					'previewBlocked' => __( 'このページはプレビューに読み込めません（管理画面と同じサイトの URL ではありません）。', 'wp-plugin-kashiwazaki-seo-heatmap' ),
 					/* translators: %s: 表示するデータの種類（クリック、レイジクリックなど）。 */
 					'noDataForType' => __( 'この期間の「%s」は 1 件も記録されていません。', 'wp-plugin-kashiwazaki-seo-heatmap' ),
 					/* translators: %s: 表示するデータの種類（スクロール到達率、マウスムーブ）。 */
@@ -213,7 +218,7 @@ class Kashiwazaki_SEO_Heatmap_Admin {
 
 		// page_key が無く URL がある場合は URL から作る。
 		if ( '' === $page_key && '' !== $url ) {
-			$page_key = kashiwazaki_seo_heatmap_page_key( kashiwazaki_seo_heatmap_normalize_url_path( $url ) );
+			$page_key = kashiwazaki_seo_heatmap_page_key( kashiwazaki_seo_heatmap_normalize_page_url( $url ) );
 		}
 		if ( '' !== $device && ! in_array( $device, array( 'desktop', 'tablet', 'mobile' ), true ) ) {
 			$device = '';
@@ -235,6 +240,10 @@ class Kashiwazaki_SEO_Heatmap_Admin {
 		$scroll     = kashiwazaki_seo_heatmap_get_scroll_distribution( $args );
 		$totals     = kashiwazaki_seo_heatmap_get_page_totals( $args );
 		$series     = kashiwazaki_seo_heatmap_get_daily_series( $args );
+		// 訪問者数は期間・ページをまたいで重複なしで数える（集計の visitors を足すと
+		// 同じ人を日ごとに数え直してしまうため）。
+		$visitors   = kashiwazaki_seo_heatmap_count_unique_visitors( $args );
+		$limited    = kashiwazaki_seo_heatmap_visitors_limited_days( $args['date_from'] );
 
 		$post_url = '';
 		if ( $post_id > 0 ) {
@@ -254,7 +263,9 @@ class Kashiwazaki_SEO_Heatmap_Admin {
 				'scroll'   => $scroll,
 				'totals'   => array(
 					'pageviews'  => isset( $totals['pageviews'] ) ? (int) $totals['pageviews'] : 0,
-					'visitors'   => isset( $totals['visitors'] ) ? (int) $totals['visitors'] : 0,
+					'visitors'   => $visitors,
+					// 0 でなければ「訪問者数は直近この日数の分だけ」（生データの保持期間）。
+					'visitorsLimitedDays' => $limited,
 					'entrances'  => isset( $totals['entrances'] ) ? (int) $totals['entrances'] : 0,
 					'avgTime'    => ( isset( $totals['pageviews'] ) && (int) $totals['pageviews'] > 0 ) ? round( (float) $totals['total_time'] / (int) $totals['pageviews'], 1 ) : 0,
 				),
@@ -399,4 +410,40 @@ class Kashiwazaki_SEO_Heatmap_Admin {
 		fclose( $output );
 		exit;
 	}
+}
+
+/**
+ * 3 つの画面（ヒートマップ・ダッシュボード・設定）を行き来するタブを出力する。
+ *
+ * WordPress 本体の画面と同じ形（nav.nav-tab-wrapper の中の a.nav-tab）にし、今の画面のタブに
+ * nav-tab-active と aria-current="page" を付ける。ページを切り替えるリンクなので、ARIA の
+ * タブ部品（aria-selected）にはしない。公式: MDN aria-current「page: Represents the current
+ * page within a set of pages」。
+ *
+ * 直後に hr.wp-header-end を置く。WordPress 本体の common.js は、inline でない通知を
+ * .wp-header-end の後へ移すので、ほかのプラグインの通知や「設定を保存しました。」が
+ * 見出しとタブの間に割り込まない。
+ *
+ * @param string $current 今の画面（heatmap / dashboard / settings）。
+ * @return void
+ */
+function kashiwazaki_seo_heatmap_render_admin_tabs( $current ) {
+	$slug = KASHIWAZAKI_SEO_HEATMAP_MENU_SLUG;
+	$tabs = array(
+		'heatmap'   => array( $slug, __( 'ヒートマップ', 'wp-plugin-kashiwazaki-seo-heatmap' ) ),
+		'dashboard' => array( $slug . '-dashboard', __( 'ダッシュボード', 'wp-plugin-kashiwazaki-seo-heatmap' ) ),
+		'settings'  => array( $slug . '-settings', __( '設定', 'wp-plugin-kashiwazaki-seo-heatmap' ) ),
+	);
+	?>
+	<nav class="nav-tab-wrapper wp-clearfix kashiwazaki-seo-heatmap-tabs" aria-label="<?php echo esc_attr__( 'Kashiwazaki SEO Heatmap のメニュー', 'wp-plugin-kashiwazaki-seo-heatmap' ); ?>">
+		<?php foreach ( $tabs as $key => $tab ) : ?>
+			<?php if ( $key === $current ) : ?>
+				<a href="<?php echo esc_url( admin_url( 'admin.php?page=' . $tab[0] ) ); ?>" class="nav-tab nav-tab-active" aria-current="page"><?php echo esc_html( $tab[1] ); ?></a>
+			<?php else : ?>
+				<a href="<?php echo esc_url( admin_url( 'admin.php?page=' . $tab[0] ) ); ?>" class="nav-tab"><?php echo esc_html( $tab[1] ); ?></a>
+			<?php endif; ?>
+		<?php endforeach; ?>
+	</nav>
+	<hr class="wp-header-end">
+	<?php
 }

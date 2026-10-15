@@ -46,12 +46,15 @@ function kashiwazaki_seo_heatmap_render_heatmap_page() {
 	?>
 	<div class="wrap kashiwazaki-seo-heatmap-wrap">
 		<h1><?php echo esc_html__( 'Kashiwazaki SEO Heatmap', 'wp-plugin-kashiwazaki-seo-heatmap' ); ?></h1>
+		<?php kashiwazaki_seo_heatmap_render_admin_tabs( 'heatmap' ); ?>
 		<p class="kashiwazaki-seo-heatmap-lead">
 			<?php echo esc_html__( '計測したいページを選ぶと、そのページのどこがクリックされているかをヒートマップで確認できます。', 'wp-plugin-kashiwazaki-seo-heatmap' ); ?>
 			<?php if ( empty( $tracked ) ) : ?>
 				<strong><?php echo esc_html__( 'まだデータがありません。投稿を開いて少し操作すると、数秒後にデータが表示されます。', 'wp-plugin-kashiwazaki-seo-heatmap' ); ?></strong>
 			<?php endif; ?>
 		</p>
+
+		<?php kashiwazaki_seo_heatmap_render_schema_notice(); ?>
 
 		<div class="kashiwazaki-seo-heatmap-toolbar">
 			<div class="kashiwazaki-seo-heatmap-field">

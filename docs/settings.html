@@ -12,7 +12,7 @@
 <nav class="sidebar">
     <div class="sidebar-header">
         <h2 style="color:#fff;">Kashiwazaki SEO Heatmap</h2>
-        <span class="version">v1.0.0</span>
+        <span class="version">v1.0.1</span>
         <img src="images/main-visual.png" alt="" style="width:100%;border-radius:4px;margin-top:8px;">
     </div>
     <ul>
@@ -91,13 +91,14 @@
         <div class="callout callout-tip">
             <p>自分でサイトを確認することが多い場合、この設定をオンにしておくと、自分のクリックが集計に混ざりません。はじめからオンになっています。</p>
         </div>
+        <p><strong>補足</strong>: オンのときは、ログインしている間だけ、記録しない人であることを示す Cookie を使います（ログアウトすると消えます）。ログインする前に作られて、まだ届いていない記録も、ログインの後は計測に含めません。</p>
 
         <h3>除外する権限グループ</h3>
         <p><strong>何をするものか</strong>: どの役割のユーザーのアクセスを除外するかを選びます。サイトで使っている権限グループ（管理者・編集者など）が一覧に並びます。<strong>既定値</strong>は「管理者」と「編集者」です。</p>
 
         <h3>除外する IP アドレス</h3>
         <p><strong>何をするものか</strong>: 特定の IP アドレスからのアクセスを計測から外します。1 行に 1 つずつ入力します。完全一致のほか、末尾に「*」を付けると前方一致で指定できます。はじめは空欄です。</p>
-        <p><strong>注意点</strong>: 入力した IP アドレスは除外の判定にだけ使われ、データベースには保存されません。</p>
+        <p><strong>注意点</strong>: 入力した IP アドレスは除外の判定にだけ使われ、データベースには保存されません。CDN や中継サーバーの後ろにあるサイトでも、転送された訪問者の IP と照らし合わせます。</p>
 
         <h3>除外する URL パターン</h3>
         <p><strong>何をするものか</strong>: 特定の URL を含むページを計測から外します。1 行に 1 つずつ入力し、URL の一部が一致すると除外されます。はじめは空欄です。</p>
@@ -190,6 +191,7 @@
         </figure>
         <div class="callout callout-warning">
             <p>各項目を変更しても、「設定を保存」を押すまでは反映されません。変更したら必ず保存してください。</p>
+            <p>変更して保存しないまま、見出しの下のタブ（ヒートマップ・ダッシュボード・設定）を押すと、「保存していない変更があります。このまま移動しますか？」と確かめる案内が出ます。「キャンセル」を押すと設定画面に残ります。左メニューから移動したときは、この案内は出ません。</p>
         </div>
     </section>
 
@@ -226,7 +228,7 @@
 
     <footer class="manual-footer">
         <p>作者: <a href="https://www.tsuyoshikashiwazaki.jp/profile/" target="_blank" rel="noopener">柏崎剛（Tsuyoshi Kashiwazaki）</a></p>
-        <p>プラグイン: Kashiwazaki SEO Heatmap v1.0.0 | <a href="https://github.com/TsuyoshiKashiwazaki/wp-plugin-kashiwazaki-seo-heatmap" target="_blank" rel="noopener">GitHub</a></p>
+        <p>プラグイン: Kashiwazaki SEO Heatmap v1.0.1 | <a href="https://github.com/TsuyoshiKashiwazaki/wp-plugin-kashiwazaki-seo-heatmap" target="_blank" rel="noopener">GitHub</a></p>
     </footer>
 </main>
 

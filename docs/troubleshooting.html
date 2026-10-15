@@ -12,7 +12,7 @@
 <nav class="sidebar">
     <div class="sidebar-header">
         <h2 style="color:#fff;">Kashiwazaki SEO Heatmap</h2>
-        <span class="version">v1.0.0</span>
+        <span class="version">v1.0.1</span>
         <img src="images/main-visual.png" alt="" style="width:100%;border-radius:4px;margin-top:8px;">
     </div>
     <ul>
@@ -61,10 +61,16 @@
         <p><strong>症状</strong>: 「計測対象の投稿タイプがまだ選ばれていません。…」という警告が表示される。</p>
         <p><strong>原因</strong>: 計測する投稿タイプが 1 つも選ばれていません。</p>
         <p><strong>対処</strong>: 警告の中の「設定を開く」を押し、「計測する対象」で投稿タイプにチェックを入れて保存します。</p>
+        <p><strong>症状（そのほかの警告）</strong>: 「データベースの更新が終わっていません。計測データの表を変更できない状態です…」という警告が表示される。</p>
+        <p><strong>原因</strong>: 計測データの表を変更する権限が、データベースのユーザーに無いなどの理由で、表の更新が終わっていません。この間、読み込みの途中に離れたページなどの到達率は、訪問者のブラウザで送り直しを待ち、7 日を過ぎた分は記録されません。</p>
+        <p><strong>対処</strong>: サーバーの管理者に、データベースのユーザーの権限を確かめてもらってください。権限が直ると、次のアクセスで自動で更新されます。</p>
+        <p><strong>症状（届いていない操作）</strong>: 「直近 8 日に、訪問者のブラウザからまだ届いていない操作が N 件あります…」というお知らせが表示される。</p>
+        <p><strong>原因</strong>: ブラウザの保存領域が使えない・一杯の状態で、受け取りを確かめられないままページを離れた訪問者の分です。これらの操作は、画面の数字には入っていません。</p>
+        <p><strong>対処</strong>: 対処は要りません。その訪問者が後でこのサイトを開くと届き、件数は減ります。</p>
 
         <h3>クリックしたのに数が増えない</h3>
         <p><strong>症状</strong>: 自分でクリックしてもクリック数が増えない。</p>
-        <p><strong>確認すること</strong>: ログイン中のユーザーは計測から除外されます。また、除外する権限グループに自分の役割が入っていないか確認してください。</p>
+        <p><strong>確認すること</strong>: ログイン中のユーザーは計測から除外されます。また、除外する権限グループに自分の役割が入っていないか、除外する IP アドレスや URL パターンに当てはまっていないか、ブラウザの「追跡しない（Do Not Track）」が有効になっていないか（設定の「ブラウザの「追跡しない」設定を尊重する」がオンのとき、計測されません）を確認してください。</p>
         <p><strong>対処</strong>: ログインしていないブラウザで試すと計測されます。自分のアクセスも計測したい特別な場合は、設定の「ログイン中のユーザーを計測から除外する」と「除外する権限グループ」を見直してください。</p>
 
         <h3>マウスムーブのデータが無い</h3>
@@ -126,7 +132,7 @@
 
     <footer class="manual-footer">
         <p>作者: <a href="https://www.tsuyoshikashiwazaki.jp/profile/" target="_blank" rel="noopener">柏崎剛（Tsuyoshi Kashiwazaki）</a></p>
-        <p>プラグイン: Kashiwazaki SEO Heatmap v1.0.0 | <a href="https://github.com/TsuyoshiKashiwazaki/wp-plugin-kashiwazaki-seo-heatmap" target="_blank" rel="noopener">GitHub</a></p>
+        <p>プラグイン: Kashiwazaki SEO Heatmap v1.0.1 | <a href="https://github.com/TsuyoshiKashiwazaki/wp-plugin-kashiwazaki-seo-heatmap" target="_blank" rel="noopener">GitHub</a></p>
     </footer>
 </main>
 

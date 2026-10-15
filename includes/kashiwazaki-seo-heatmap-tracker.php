@@ -40,7 +40,7 @@ function kashiwazaki_seo_heatmap_enqueue_tracker() {
 		'kashiwazaki-seo-heatmap-tracker',
 		KASHIWAZAKI_SEO_HEATMAP_PLUGIN_URL . 'assets/js/kashiwazaki-seo-heatmap-tracker.js',
 		array(),
-		KASHIWAZAKI_SEO_HEATMAP_VERSION,
+		kashiwazaki_seo_heatmap_asset_version( 'assets/js/kashiwazaki-seo-heatmap-tracker.js' ),
 		true
 	);
 
@@ -49,6 +49,12 @@ function kashiwazaki_seo_heatmap_enqueue_tracker() {
 		'postId'        => kashiwazaki_seo_heatmap_get_current_post_id(),
 		'cookieName'    => KASHIWAZAKI_SEO_HEATMAP_COOKIE_NAME,
 		'cookieDays'    => (int) $settings['cookie_lifetime_days'],
+		// ログイン中で計測から外す人の印の Cookie の名前（印があれば、操作をまとまりにしない）。
+		'excludeCookie' => kashiwazaki_seo_heatmap_exclude_cookie_name(),
+		// 投稿を特定するクエリの名前（とても長い URL を短くするときも、これらは残す）。
+		'pageKeys'      => kashiwazaki_seo_heatmap_page_query_keys(),
+		// 到達率を数えるマイルストーン（%）。読み込みの途中の仮の値は、新しいマイルストーンを越えたときだけ送る。
+		'milestones'    => kashiwazaki_seo_heatmap_scroll_milestones(),
 		'sampleRate'    => (int) $settings['sample_rate'],
 		'flushInterval' => (int) $settings['flush_interval_ms'],
 		'track'         => array(

@@ -357,3 +357,8 @@
 	display: inline-block;
 	margin-right: 12px;
 }
+
+/* 3 画面を行き来するタブ（見た目は WordPress 本体の .nav-tab のまま、下に余白だけを足す）。 */
+.kashiwazaki-seo-heatmap-wrap .kashiwazaki-seo-heatmap-tabs {
+	margin-bottom: 12px;
+}

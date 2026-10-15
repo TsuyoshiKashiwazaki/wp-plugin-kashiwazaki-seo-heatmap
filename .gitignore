@@ -1,5 +1,6 @@
 # === AI / 開発ツール設定 (公開リポジトリに入れてはいけない) ===
 CLAUDE.md
+.claude/
 .codex
 .cursor/
 .aider*

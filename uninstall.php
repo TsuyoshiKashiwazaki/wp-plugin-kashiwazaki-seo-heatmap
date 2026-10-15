@@ -26,10 +26,12 @@ function kashiwazaki_seo_heatmap_uninstall_site() {
 	global $wpdb;
 
 	$option   = 'kashiwazaki_seo_heatmap_settings';
-	$settings = get_option( $option, array() );
+	$settings = get_option( $option, false );
 
-	// 設定が消えている、または「削除時に消す」が選ばれていない場合は何もしない。
-	if ( ! is_array( $settings ) || empty( $settings['delete_data_on_uninstall'] ) ) {
+	// 設定が保存されていないサイト（マルチサイトで一度も開かれていない子サイトなど）は、
+	// 画面の既定（「削除したときに計測データと設定も消す」がオン）として扱う。
+	// 「削除時に消す」が外されているときだけ、データを残す。
+	if ( is_array( $settings ) && empty( $settings['delete_data_on_uninstall'] ) ) {
 		return;
 	}
 
@@ -37,6 +39,7 @@ function kashiwazaki_seo_heatmap_uninstall_site() {
 		$wpdb->prefix . 'kashiwazaki_seo_heatmap_events',
 		$wpdb->prefix . 'kashiwazaki_seo_heatmap_stats',
 		$wpdb->prefix . 'kashiwazaki_seo_heatmap_pages',
+		$wpdb->prefix . 'kashiwazaki_seo_heatmap_batches',
 	);
 
 	foreach ( $tables as $table ) {
@@ -47,6 +50,8 @@ function kashiwazaki_seo_heatmap_uninstall_site() {
 	// 設定とスキーマのバージョン。
 	delete_option( $option );
 	delete_option( 'kashiwazaki_seo_heatmap_db_version' );
+	delete_option( 'kashiwazaki_seo_heatmap_needs_innodb' );
+	delete_option( 'kashiwazaki_seo_heatmap_converting' );
 
 	// レート制限などの一時データ（接頭辞でまとめて消す）。
 	// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.PreparedSQL.InterpolatedNotPrepared
@@ -60,6 +65,7 @@ function kashiwazaki_seo_heatmap_uninstall_site() {
 
 	// 定期実行の予約を確実に外す。
 	wp_clear_scheduled_hook( 'kashiwazaki_seo_heatmap_cleanup_event' );
+	wp_clear_scheduled_hook( 'kashiwazaki_seo_heatmap_convert_event' );
 }
 
 if ( is_multisite() ) {
@@ -81,3 +87,4 @@ if ( is_multisite() ) {
 
 // クーロンはどのサイトでも必ず外す（設定に関わらず残骸を残さない）。
 wp_clear_scheduled_hook( 'kashiwazaki_seo_heatmap_cleanup_event' );
+wp_clear_scheduled_hook( 'kashiwazaki_seo_heatmap_convert_event' );

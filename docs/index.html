@@ -12,7 +12,7 @@
 <nav class="sidebar">
     <div class="sidebar-header">
         <h2 style="color:#fff;">Kashiwazaki SEO Heatmap</h2>
-        <span class="version">v1.0.0</span>
+        <span class="version">v1.0.1</span>
         <img src="images/main-visual.png" alt="" style="width:100%;border-radius:4px;margin-top:8px;">
     </div>
     <ul>
@@ -58,11 +58,11 @@
         <h3>レイジクリック・デッドクリックの検出</h3>
         <p>同じ場所を短時間に連打する「レイジクリック」と、押しても何も起きない「デッドクリック」を検出します。これらは、反応しないボタンや期待どおりに動かないリンクがあるサインであることが多く、離脱や直帰につながりかねません。早い段階で気づくための手がかりになります。</p>
 
-        <h3>表示速度への影響を抑えた設計</h3>
-        <p>フロント側で読み込むのは計測用の JavaScript 1 本だけで、実測 <strong>22,907 バイト</strong>（gzip 圧縮で <strong>7,579 バイト</strong>）です。フロント側で CSS は読み込まず、管理画面用のファイルも一般のページには読み込まれません。アクセスの多いサイトでは、あとで説明する「サンプリング」（何 % の訪問者を計測するか）を下げてデータ量を抑えられます。これらの事実から、ページ速度を低下させない設計になっています。</p>
+        <h3>フロントで読み込むファイルを 1 本に絞った設計</h3>
+        <p>フロント側で読み込むのは計測用の JavaScript 1 本だけで、実測 <strong>92,142 バイト</strong>（gzip 圧縮で約 <strong>27,300 バイト</strong>）です。フロント側で CSS は読み込まず、管理画面用のファイルも一般のページには読み込まれません。アクセスの多いサイトでは、あとで説明する「サンプリング」（何 % の訪問者を計測するか）を下げてデータ量を抑えられます。フロント側で増えるのは、この 1 ファイルの読み込みだけです。</p>
 
         <h3>プライバシーに配慮したデータの扱い</h3>
-        <p>IP アドレスは保存しません（除外の判定にのみ使い、データベースには残しません）。訪問者の識別には、ブラウザの Cookie に保存したランダムな文字列だけを使います。ブラウザの「追跡しない（Do Not Track）」設定を尊重でき、ログイン中のユーザーや特定の権限グループも計測から除外できます。個人を特定しにくい形で行動データを扱えるため、プライバシーに配慮した運用の助けになります。</p>
+        <p>IP アドレスは保存しません（除外の判定にのみ使い、データベースには残しません）。訪問者の識別には、ブラウザの Cookie に保存したランダムな文字列だけを使います。通信の都合でまだ届いていない記録は、届くまでの間だけ訪問者のブラウザの保存領域（localStorage）に残して次に開いたページから送り直し、届いたものは消します（届かないまま 7 日を過ぎたものは送らずに消します）。ブラウザに保存できないときだけ、その記録の番号（ランダムな文字列）と操作の件数を Cookie に最長 7 日残します。ブラウザの「追跡しない（Do Not Track）」設定を尊重でき、ログイン中のユーザーや特定の権限グループも計測から除外できます。個人を特定しにくい形で行動データを扱えるため、プライバシーに配慮した運用の助けになります。</p>
     </section>
 
     <figure class="infographic">
@@ -142,7 +142,7 @@
 
     <footer class="manual-footer">
         <p>作者: <a href="https://www.tsuyoshikashiwazaki.jp/profile/" target="_blank" rel="noopener">柏崎剛（Tsuyoshi Kashiwazaki）</a></p>
-        <p>プラグイン: Kashiwazaki SEO Heatmap v1.0.0 | <a href="https://github.com/TsuyoshiKashiwazaki/wp-plugin-kashiwazaki-seo-heatmap" target="_blank" rel="noopener">GitHub</a></p>
+        <p>プラグイン: Kashiwazaki SEO Heatmap v1.0.1 | <a href="https://github.com/TsuyoshiKashiwazaki/wp-plugin-kashiwazaki-seo-heatmap" target="_blank" rel="noopener">GitHub</a></p>
     </footer>
 </main>
 

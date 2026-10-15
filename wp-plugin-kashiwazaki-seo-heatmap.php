@@ -3,7 +3,7 @@
  * Plugin Name: Kashiwazaki SEO Heatmap
  * Plugin URI: https://www.tsuyoshikashiwazaki.jp
  * Description: 投稿・固定ページ・カスタム投稿の「どこがクリックされているか」を可視化するクリック/スクロール/マウスムーブのヒートマップ解析プラグイン。レイジクリック・デッドクリック検出、要素別ランキング、デバイス絞り込み、CSV書き出しに対応。
- * Version: 1.0.0
+ * Version: 1.0.1
  * Author: 柏崎剛 (Tsuyoshi Kashiwazaki)
  * Author URI: https://www.tsuyoshikashiwazaki.jp/profile/
  * License: GPLv2 or later
@@ -29,7 +29,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 define( 'KASHIWAZAKI_SEO_HEATMAP_PLUGIN_FILE', __FILE__ );
 define( 'KASHIWAZAKI_SEO_HEATMAP_PLUGIN_DIR', plugin_dir_path( __FILE__ ) );
 define( 'KASHIWAZAKI_SEO_HEATMAP_PLUGIN_URL', plugin_dir_url( __FILE__ ) );
-define( 'KASHIWAZAKI_SEO_HEATMAP_VERSION', '1.0.0' );
+define( 'KASHIWAZAKI_SEO_HEATMAP_VERSION', '1.0.1' );
 
 // メニュー（トップレベル）のスラッグ。位置は設定(80)の直後、区切り(99)の前の 81。
 define( 'KASHIWAZAKI_SEO_HEATMAP_MENU_SLUG', 'kashiwazaki-seo-heatmap' );
@@ -43,16 +43,26 @@ define( 'KASHIWAZAKI_SEO_HEATMAP_REST_NAMESPACE', 'kashiwazaki-seo-heatmap/v1' )
 define( 'KASHIWAZAKI_SEO_HEATMAP_EVENTS_TABLE', 'kashiwazaki_seo_heatmap_events' );
 define( 'KASHIWAZAKI_SEO_HEATMAP_AGG_TABLE', 'kashiwazaki_seo_heatmap_stats' );
 define( 'KASHIWAZAKI_SEO_HEATMAP_PAGES_TABLE', 'kashiwazaki_seo_heatmap_pages' );
+// 受け取った送信のまとまりの番号（送り直しを二重に数えないため）。
+define( 'KASHIWAZAKI_SEO_HEATMAP_BATCHES_TABLE', 'kashiwazaki_seo_heatmap_batches' );
 
-// スキーマのバージョン（dbDelta の再適用判定に使う）。
-define( 'KASHIWAZAKI_SEO_HEATMAP_DB_VERSION', '1.0.1' );
+// スキーマのバージョン（dbDelta の再適用判定に使う）。1.0.7 で、番号の表の prov の長さも確かめてから
+// 版を記録するようにした（1.0.6 を記録したサイトでも確かめ直す）。
+define( 'KASHIWAZAKI_SEO_HEATMAP_DB_VERSION', '1.0.7' );
 define( 'KASHIWAZAKI_SEO_HEATMAP_DB_VERSION_OPTION', 'kashiwazaki_seo_heatmap_db_version' );
+// 表に InnoDB でないものがあり、変換を待っている印（1 のとき、保存は取引の効かない表の扱い）。
+define( 'KASHIWAZAKI_SEO_HEATMAP_NEEDS_INNODB_OPTION', 'kashiwazaki_seo_heatmap_needs_innodb' );
+// 表を変換している途中の印（変換を始めた UNIX 秒。0 なら変換していない）。
+define( 'KASHIWAZAKI_SEO_HEATMAP_CONVERTING_OPTION', 'kashiwazaki_seo_heatmap_converting' );
 
 // 設定オプション（1 つの配列にまとめて保存する）。
 define( 'KASHIWAZAKI_SEO_HEATMAP_SETTINGS_OPTION', 'kashiwazaki_seo_heatmap_settings' );
 
 // 訪問者を識別する Cookie（個人を特定しないランダム ID のみ保存する）。
 define( 'KASHIWAZAKI_SEO_HEATMAP_COOKIE_NAME', 'kashiwazaki_seo_heatmap_visitor' );
+
+// ログイン中で計測から外す人に付ける印の Cookie の名前の接頭辞（後ろにサイトの URL の指紋が付く）。
+define( 'KASHIWAZAKI_SEO_HEATMAP_EXCLUDE_COOKIE_PREFIX', 'kashiwazaki_seo_heatmap_ex_' );
 
 // 生データの既定保持日数。
 define( 'KASHIWAZAKI_SEO_HEATMAP_DEFAULT_RETENTION_DAYS', 180 );
@@ -104,15 +114,31 @@ register_deactivation_hook( KASHIWAZAKI_SEO_HEATMAP_PLUGIN_FILE, 'kashiwazaki_se
  */
 function kashiwazaki_seo_heatmap_bootstrap() {
 	// 更新後に再有効化されなくてもテーブルが無ければ作る（自己修復）。
+	// 作成に失敗したときは版を記録しない（次のリクエストでまた作り直しを試す）。
 	if ( get_option( KASHIWAZAKI_SEO_HEATMAP_DB_VERSION_OPTION ) !== KASHIWAZAKI_SEO_HEATMAP_DB_VERSION ) {
 		kashiwazaki_seo_heatmap_create_tables();
-		update_option( KASHIWAZAKI_SEO_HEATMAP_DB_VERSION_OPTION, KASHIWAZAKI_SEO_HEATMAP_DB_VERSION );
+		if ( kashiwazaki_seo_heatmap_tables_exist() ) {
+			// InnoDB でない表があれば、変換を予約する（この起動の中では変換しない。db.php を参照）。
+			kashiwazaki_seo_heatmap_check_engines();
+			update_option( KASHIWAZAKI_SEO_HEATMAP_DB_VERSION_OPTION, KASHIWAZAKI_SEO_HEATMAP_DB_VERSION );
+		}
 	}
+
+	// ログイン中で計測から外す人の印の Cookie を、いまのログインの状態に合わせる。
+	kashiwazaki_seo_heatmap_sync_exclude_cookie();
+
+	// 設定と自動削除の予約がこのサイトに無ければ入れる。マルチサイトの
+	// ネットワーク有効化では、有効化の処理が 1 つのサイトでしか動かないため。
+	kashiwazaki_seo_heatmap_ensure_site_setup();
 
 	// フロント側の計測スクリプト。
 	kashiwazaki_seo_heatmap_register_tracker_hooks();
 }
 add_action( 'init', 'kashiwazaki_seo_heatmap_bootstrap', 5 );
+
+// ログイン・ログアウトの応答で、計測から外す人の印の Cookie を付ける・消す。
+add_action( 'set_logged_in_cookie', 'kashiwazaki_seo_heatmap_mark_on_login', 10, 4 );
+add_action( 'clear_auth_cookie', 'kashiwazaki_seo_heatmap_unmark_on_logout' );
 
 /**
  * 管理画面のプレビュー（iframe）では管理バーを出さない。
@@ -142,6 +168,9 @@ add_action( 'rest_api_init', 'kashiwazaki_seo_heatmap_register_rest_routes' );
  * 保持期間を超えたデータを消すクーロン。
  */
 add_action( 'kashiwazaki_seo_heatmap_cleanup_event', 'kashiwazaki_seo_heatmap_run_cleanup' );
+
+// 表を InnoDB に変換する予約の実行（db.php）。
+add_action( 'kashiwazaki_seo_heatmap_convert_event', 'kashiwazaki_seo_heatmap_convert_tables' );
 
 /**
  * 管理画面のメニューを登録する。

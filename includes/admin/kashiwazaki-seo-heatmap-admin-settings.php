@@ -26,6 +26,7 @@ function kashiwazaki_seo_heatmap_render_settings_page() {
 	?>
 	<div class="wrap kashiwazaki-seo-heatmap-wrap">
 		<h1><?php echo esc_html__( 'Kashiwazaki SEO Heatmap — 設定', 'wp-plugin-kashiwazaki-seo-heatmap' ); ?></h1>
+		<?php kashiwazaki_seo_heatmap_render_admin_tabs( 'settings' ); ?>
 
 		<?php
 		// 保存したときの「設定を保存しました。」を出す。
@@ -100,7 +101,7 @@ function kashiwazaki_seo_heatmap_render_settings_page() {
 					<th scope="row"><label for="kashiwazaki-seo-heatmap-exclude-ips"><?php echo esc_html__( '除外する IP アドレス', 'wp-plugin-kashiwazaki-seo-heatmap' ); ?></label></th>
 					<td>
 						<textarea id="kashiwazaki-seo-heatmap-exclude-ips" name="<?php echo esc_attr( $option ); ?>[exclude_ips]" rows="4" class="large-text code"><?php echo esc_textarea( $settings['exclude_ips'] ); ?></textarea>
-						<p class="description"><?php echo esc_html__( '1 行に 1 つ。IP アドレスは完全一致で判定し、末尾に「*」を付けると前方一致になります（例: 203.0.113.*）。IP は保存しません（除外の判定にだけ使います）。', 'wp-plugin-kashiwazaki-seo-heatmap' ); ?></p>
+						<p class="description"><?php echo esc_html__( '1 行に 1 つ。IP アドレスは完全一致で判定し、末尾に「*」を付けると前方一致になります（例: 203.0.113.*）。CDN や中継サーバーの後ろにあるサイトでも、転送された訪問者の IP と照らし合わせます。IP は保存しません（除外の判定にだけ使います）。', 'wp-plugin-kashiwazaki-seo-heatmap' ); ?></p>
 					</td>
 				</tr>
 				<tr>

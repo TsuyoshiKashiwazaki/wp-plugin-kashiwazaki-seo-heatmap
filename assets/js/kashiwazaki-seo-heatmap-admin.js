@@ -101,6 +101,17 @@
 		return Math.max( min, Math.min( max, v ) );
 	}
 
+	/**
+	 * 到達した閲覧の割合（0〜1）。分母は閲覧数。記録の時期のずれで到達数が
+	 * 閲覧数を少し上回ることがあるので、1 を上限にする。
+	 */
+	function reachRatio( count, views ) {
+		if ( ! views || views <= 0 ) {
+			return 0;
+		}
+		return clamp( ( count || 0 ) / views, 0, 1 );
+	}
+
 	function ajax( action, params ) {
 		var body = new FormData();
 		body.append( 'action', action );
@@ -400,12 +411,28 @@
 				$( 'kashiwazaki-seo-heatmap-canvas' ).style.display = 'none';
 				return;
 			}
+			// プレビューに読み込むのは、管理画面と同じサイトの URL だけにする。
+			// 記録された URL は訪問者の送信から来るので、「//別のサイト/…」のような
+			// 値で外部のページを管理画面の中に表示させられないようにする。
+			var target = null;
+			try {
+				target = new URL( url, window.location.href );
+			} catch ( e ) {
+				target = null;
+			}
+			if ( ! target || target.origin !== window.location.origin ) {
+				frame.style.display = 'none';
+				$( 'kashiwazaki-seo-heatmap-canvas' ).style.display = 'none';
+				showNotice( placeholder, CFG.i18n.previewBlocked );
+				placeholder.classList.remove( 'is-hidden' );
+				return;
+			}
 			placeholder.classList.add( 'is-hidden' );
 			frame.style.display = '';
 			$( 'kashiwazaki-seo-heatmap-canvas' ).style.display = '';
 			frameLoaded = true;
-			var previewUrl = url + ( url.indexOf( '?' ) === -1 ? '?' : '&' ) + 'kashiwazaki_seo_heatmap_preview=1';
-			frame.src = previewUrl;
+			target.searchParams.set( 'kashiwazaki_seo_heatmap_preview', '1' );
+			frame.src = target.href;
 		}
 
 		/* ------------------------------ 読み込み ------------------------------ */
@@ -538,6 +565,43 @@
 			ph.classList.add( 'is-hidden' );
 			applyFrameWidth( frameEl, innerEl );
 
+			// プレビューの中をスクロールしたら、重ねたヒートも同じだけ動かす。
+			// 遅延読み込みでページが伸びたら測り直す。
+			var win = doc.defaultView;
+			if ( win ) {
+				var lastHeight = 0;
+				var remeasure = 0;
+				var refloat = 0;
+				var refloatEnd = 0;
+				win.addEventListener( 'scroll', function () {
+					window.requestAnimationFrame( paint );
+					// 画面に固定される要素の点があれば、スクロールの間も一定の間隔で位置を測り直す
+					// （固定の要素は窓に残るので、文書の座標がスクロールのたびに変わる）。
+					if ( state.hasFloating && ! refloat ) {
+						refloat = window.setTimeout( function () {
+							refloat = 0;
+							measureAndDraw( frameEl, innerEl, tip );
+						}, 120 );
+					}
+					// 止まったところでは、固定の要素の点が無くても、すべての点の位置を測り直す。
+					// テーマのスクリプトがスクロールに合わせてヘッダーを後から固定する（クラスを付ける）
+					// ことがあり、読み込んだ時点では固定でなかった要素も、窓の中の別の場所に移るため。
+					// 位置が変わった点があるときだけ描き直す。
+					window.clearTimeout( refloatEnd );
+					refloatEnd = window.setTimeout( function () {
+						redrawIfMoved( doc, frameEl );
+					}, 200 );
+					var h = doc.documentElement ? doc.documentElement.scrollHeight : 0;
+					if ( lastHeight && h > lastHeight ) {
+						window.clearTimeout( remeasure );
+						remeasure = window.setTimeout( function () {
+							measureAndDraw( frameEl, innerEl, tip );
+						}, 400 );
+					}
+					lastHeight = h;
+				}, { passive: true } );
+			}
+
 			waitForImages( doc, 4000 ).then( function () {
 				measureAndDraw( frameEl, innerEl, tip );
 				// 遅れて伸びるページ（遅延読み込み）にも追従する。
@@ -549,6 +613,25 @@
 
 		/* ------------------------------ 描画 ------------------------------ */
 
+		/**
+		 * プレビューの窓の高さ（端末ごとの一般的な画面の高さ。管理画面に収まる大きさまで）。
+		 *
+		 * プレビューを文書の高さまで伸ばすと、vh 単位（画面の高さに合わせる区画）を使う
+		 * テーマでは、伸ばした分だけ区画も伸びて、測った高さと実際の配置が食い違う。
+		 * 実際の訪問者と同じように「画面の高さの窓」の中をスクロールさせ、
+		 * ヒートはその窓に合わせて重ねる。
+		 */
+		function frameViewportHeight() {
+			var deviceHeight = 900;
+			if ( state.deviceWidth === 'tablet' ) {
+				deviceHeight = 1024;
+			} else if ( state.deviceWidth === 'mobile' ) {
+				deviceHeight = 844;
+			}
+			var available = Math.round( window.innerHeight * 0.78 );
+			return Math.max( 320, Math.min( available, deviceHeight ) );
+		}
+
 		function applyFrameWidth( frameEl, innerEl ) {
 			var width = '';
 			if ( state.deviceWidth === 'tablet' ) {
@@ -559,6 +642,9 @@
 			frameEl.style.width = width || '100%';
 			innerEl.style.width = width || '100%';
 			innerEl.style.maxWidth = width ? width : '';
+			var height = frameViewportHeight() + 'px';
+			frameEl.style.height = height;
+			innerEl.style.height = height;
 		}
 
 		function measureAndDraw( frameEl, innerEl, tip ) {
@@ -575,16 +661,12 @@
 
 			var docEl = doc.documentElement;
 			var body = doc.body;
+			var viewH = frameViewportHeight();
+			frameEl.style.height = viewH + 'px';
+			innerEl.style.height = viewH + 'px';
 
-			// 高さを測る前に、いったん iframe を畳んでおく。
-			// documentElement.scrollHeight は「iframe の高さ」より小さい値を返さない
-			// ため、前回の高さのまま測ると 測る → 伸ばす → さらに高く測る が繰り返され、
-			// 表示を更新するたびにどんどん伸びてしまう（本文と座標がずれる原因）。
-			// これは同じ処理の中で読み終えるので、画面には出ない。
-			frameEl.style.height = '1px';
-			innerEl.style.height = '1px';
-
-			// 計測側と同じ基準（文書全体の幅）を使う。iframe の表示幅とは別物。
+			// 計測側と同じ基準（文書全体の幅と高さ）を使う。窓の高さは固定なので、
+			// vh 単位の区画も実際の画面と同じ大きさで測れる。
 			var realW = Math.max(
 				docEl.scrollWidth,
 				body ? body.scrollWidth : 0,
@@ -595,33 +677,66 @@
 				docEl.scrollHeight,
 				body ? body.scrollHeight : 0,
 				docEl.offsetHeight,
-				400
+				viewH
 			);
 
 			state.realW = realW;
 			state.realH = realH;
 
 			// 極端に長いページは描画負荷を抑えるために上限を設ける。
-			var height = Math.min( realH, 30000 );
-
 			state.docW = realW;
-			state.docH = height;
+			state.docH = Math.min( realH, 30000 );
 
-			frameEl.style.height = height + 'px';
-			innerEl.style.height = height + 'px';
-			canvas.width = state.docW;
-			canvas.height = height;
-			canvas.style.width = state.docW + 'px';
-			canvas.style.height = height + 'px';
+			// 見える canvas は窓の大きさ。右端のスクロールバーは覆わない（ドラッグできるように）。
+			var viewW = docEl.clientWidth || frameEl.clientWidth || realW;
+			canvas.width = viewW;
+			canvas.height = viewH;
+			canvas.style.width = viewW + 'px';
+			canvas.style.height = viewH + 'px';
 
 			preparePoints( doc, frameEl );
 			draw( canvas );
+		}
+
+		/**
+		 * 点の位置を測り直し、どれかの点が動いていたら描き直す（スクロールが止まったときに呼ぶ）。
+		 */
+		function redrawIfMoved( doc, frameEl ) {
+			var before = state.points;
+			preparePoints( doc, frameEl );
+			var after = state.points;
+			var moved = before.length !== after.length;
+			for ( var i = 0; ! moved && i < after.length; i++ ) {
+				if ( Math.abs( before[ i ].x - after[ i ].x ) > 0.5 || Math.abs( before[ i ].y - after[ i ].y ) > 0.5 ) {
+					moved = true;
+				}
+			}
+			if ( moved ) {
+				draw( $( 'kashiwazaki-seo-heatmap-canvas' ) );
+			}
+		}
+
+		/**
+		 * プレビューの中のスクロール位置。
+		 */
+		function frameScroll() {
+			var win = null;
+			try {
+				win = frame.contentWindow;
+			} catch ( e ) {
+				win = null;
+			}
+			return {
+				x: win ? ( win.pageXOffset || 0 ) : 0,
+				y: win ? ( win.pageYOffset || 0 ) : 0
+			};
 		}
 
 		function preparePoints( doc, frameEl ) {
 			var data = state.data;
 			state.points = [];
 			state.pointByKey = {};
+			state.hasFloating = false;
 			if ( ! data ) {
 				return;
 			}
@@ -646,6 +761,9 @@
 				if ( pos === null ) {
 					continue;
 				}
+				if ( pos.floating ) {
+					state.hasFloating = true;
+				}
 				var point = {
 					key: row.key || ( 'p' + i ),
 					count: row.count || 1,
@@ -663,6 +781,30 @@
 		}
 
 		/**
+		 * 要素か、その祖先が画面に固定される（position: fixed / sticky）か。
+		 *
+		 * 固定の要素は、スクロールしても窓の同じ場所に残る（MDN position「fixed ... The element
+		 * is positioned relative to its initial containing block, which is the viewport」）ので、
+		 * 文書の座標はスクロールのたびに変わる。そういう点があれば、スクロールに合わせて測り直す。
+		 */
+		function isFloating( el, win ) {
+			var node = el;
+			while ( node && node.nodeType === 1 ) {
+				var style = null;
+				try {
+					style = win.getComputedStyle( node );
+				} catch ( e ) {
+					style = null;
+				}
+				if ( style && ( 'fixed' === style.position || 'sticky' === style.position ) ) {
+					return true;
+				}
+				node = node.parentElement;
+			}
+			return false;
+		}
+
+		/**
 		 * 要素の現在位置を求める。見つからなければクリック時の割合から推定する。
 		 */
 		function resolvePosition( doc, frameEl, row ) {
@@ -672,21 +814,27 @@
 				// move 集計には selector が無いので、ここはクリック系のみ。
 				try {
 					var all = doc.querySelectorAll( row.selector );
+					// 記録した順番の要素が今のページに無いときは、先頭の別の要素に描かず、
+					// 下の「記録時の割合」で描く（別の要素の上に描くと、押された場所を誤って見せる）。
 					if ( all.length > index ) {
 						found = all[ index ];
-					} else if ( all.length > 0 ) {
-						found = all[ 0 ];
 					}
 				} catch ( e ) {
 					found = null;
 				}
 				if ( found ) {
 					var rect = found.getBoundingClientRect();
-					var win = doc.defaultView || window;
-					return {
-						x: rect.left + ( win.pageXOffset || 0 ) + rect.width / 2,
-						y: rect.top + ( win.pageYOffset || 0 ) + rect.height / 2
-					};
+					// プレビューで表示されていない要素（閉じたメニュー・PC 幅で隠れる
+					// スマホ用メニューなど）は大きさが 0 になり、位置が (0,0) になる。
+					// そのときは要素の位置を使わず、記録時の割合で描く。
+					if ( rect.width > 0 || rect.height > 0 ) {
+						var win = doc.defaultView || window;
+						return {
+							x: rect.left + ( win.pageXOffset || 0 ) + rect.width / 2,
+							y: rect.top + ( win.pageYOffset || 0 ) + rect.height / 2,
+							floating: isFloating( found, win )
+						};
+					}
 				}
 			}
 
@@ -707,12 +855,13 @@
 		/* ------------------------------ 実描画 ------------------------------ */
 
 		function draw( canvas ) {
-			var W = canvas.width;
-			var H = canvas.height;
+			// 文書全体の大きさでオフスクリーンに描き、見える canvas には
+			// プレビューのスクロール位置の部分だけを写す（paint）。
+			var W = Math.max( 1, Math.round( state.docW ) );
+			var H = Math.max( 1, Math.round( state.docH ) );
 			var ctx = canvas.getContext( '2d' );
-			ctx.clearRect( 0, 0, W, H );
+			ctx.clearRect( 0, 0, canvas.width, canvas.height );
 
-			// 一度オフスクリーンに描いてから見える canvas に写す（ホバー時の再描画を軽くするため）。
 			var base = document.createElement( 'canvas' );
 			base.width = W;
 			base.height = H;
@@ -743,15 +892,24 @@
 			}
 			var ctx = canvas.getContext( '2d' );
 			ctx.clearRect( 0, 0, canvas.width, canvas.height );
+			var scroll = frameScroll();
 			if ( state.baseCanvas ) {
-				ctx.drawImage( state.baseCanvas, 0, 0 );
+				// 文書全体の絵から、いまプレビューに見えている範囲だけを写す。
+				var sw = Math.min( canvas.width, Math.max( 0, state.baseCanvas.width - scroll.x ) );
+				var sh = Math.min( canvas.height, Math.max( 0, state.baseCanvas.height - scroll.y ) );
+				if ( sw > 0 && sh > 0 ) {
+					ctx.drawImage( state.baseCanvas, scroll.x, scroll.y, sw, sh, 0, 0, sw, sh );
+				}
 			}
+			ctx.save();
+			ctx.translate( -scroll.x, -scroll.y );
 			if ( state.highlightKey ) {
 				drawHighlight( ctx, state.highlightKey, '#2271b1' );
 			}
 			if ( state.hoverKey && state.hoverKey !== state.highlightKey ) {
 				drawHighlight( ctx, state.hoverKey, '#d63638' );
 			}
+			ctx.restore();
 		}
 
 		function maxCount() {
@@ -873,7 +1031,7 @@
 			var W = target.width;
 			var H = target.height;
 			ctx.clearRect( 0, 0, W, H );
-			var base = scroll[ 10 ] || scroll[ '10' ] || 0;
+			var views = state.data && state.data.totals ? ( state.data.totals.pageviews || 0 ) : 0;
 
 			for ( i = 0; i < depths.length; i++ ) {
 				var depth = depths[ i ];
@@ -882,8 +1040,8 @@
 				var bottom = ( H * depth ) / 100;
 				var ratio = count / max;
 				var alpha = 0.06 + 0.5 * ratio;
-				// 到達した人の割合（10% 到達を基準にした相対値）。
-				var reach = base > 0 ? count / base : 0;
+				// 到達した閲覧の割合（閲覧数が分母）。
+				var reach = reachRatio( count, views );
 				ctx.fillStyle = 'rgba(' +
 					Math.round( 34 + 190 * ( 1 - reach ) ) + ',' +
 					Math.round( 113 + 30 * reach ) + ',' +
@@ -927,8 +1085,10 @@
 			}
 			var canvas = $( 'kashiwazaki-seo-heatmap-canvas' );
 			var rect = canvas.getBoundingClientRect();
-			var x = event.clientX - rect.left;
-			var y = event.clientY - rect.top;
+			// 点の位置は文書の座標なので、プレビューのスクロール位置を足して比べる。
+			var scroll = frameScroll();
+			var x = event.clientX - rect.left + scroll.x;
+			var y = event.clientY - rect.top + scroll.y;
 			var nearest = null;
 			var nearestDistance = Infinity;
 			var limit = Math.max( 18, state.radius );
@@ -998,6 +1158,22 @@
 		$( 'kashiwazaki-seo-heatmap-canvas' ).addEventListener( 'mousemove', onCanvasMove );
 		$( 'kashiwazaki-seo-heatmap-canvas' ).addEventListener( 'mouseleave', onCanvasLeave );
 
+		// ヒートの上でホイールを回したら、下のプレビューをスクロールする
+		// （canvas が上に重なっているので、そのままではプレビューに届かない）。
+		$( 'kashiwazaki-seo-heatmap-canvas' ).addEventListener( 'wheel', function ( event ) {
+			var win = null;
+			try {
+				win = frame.contentWindow;
+			} catch ( e ) {
+				win = null;
+			}
+			if ( ! win ) {
+				return;
+			}
+			event.preventDefault();
+			win.scrollBy( event.deltaX, event.deltaY );
+		}, { passive: false } );
+
 		/* ------------------------------ サイド ------------------------------ */
 
 		function updateSummary( totals ) {
@@ -1006,8 +1182,15 @@
 			}
 			$( 'kashiwazaki-seo-heatmap-stat-pageviews' ).textContent = fmt( totals.pageviews );
 			$( 'kashiwazaki-seo-heatmap-stat-visitors' ).textContent = fmt( totals.visitors );
+			// 訪問者数は生データから数えるので、保持期間より前の分は入らない。そのときは見出しに日数を出す。
+			var visitorsLabel = $( 'kashiwazaki-seo-heatmap-stat-visitors' ).nextElementSibling;
+			if ( visitorsLabel ) {
+				visitorsLabel.textContent = totals.visitorsLimitedDays ?
+					CFG.i18n.visitorsLimited.replace( '%d', totals.visitorsLimitedDays ) :
+					CFG.i18n.visitorsLabel;
+			}
 			$( 'kashiwazaki-seo-heatmap-stat-avgtime' ).textContent = totals.avgTime === undefined ? '—' : fmt( totals.avgTime );
-			$( 'kashiwazaki-seo-heatmap-stat-avscroll' ).textContent = computeAverageScroll( state.data ? state.data.scroll : null );
+			$( 'kashiwazaki-seo-heatmap-stat-avscroll' ).textContent = computeAverageScroll( state.data ? state.data.scroll : null, totals.pageviews );
 			if ( state.data ) {
 				var clicks = 0;
 				var i;
@@ -1018,22 +1201,25 @@
 			}
 		}
 
-		function computeAverageScroll( scroll ) {
-			if ( ! scroll ) {
+		/**
+		 * 平均スクロール（%）＝閲覧ごとの到達した深さの平均。
+		 *
+		 * 10% 刻みの各深さに到達した閲覧の割合（到達数 ÷ 閲覧数）を足して 10 倍する
+		 * （各刻みが 10% 分の幅を表すため）。全員が最後まで読めば 100、全員が 50% で
+		 * 止まれば 50 になる。
+		 */
+		function computeAverageScroll( scroll, views ) {
+			if ( ! scroll || ! views ) {
 				return '—';
 			}
 			var depths = [ 10, 20, 30, 40, 50, 60, 70, 80, 90, 100 ];
-			var base = scroll[ 10 ] || scroll[ '10' ] || 0;
-			if ( ! base ) {
-				return '—';
-			}
 			var sum = 0;
 			var i;
 			for ( i = 0; i < depths.length; i++ ) {
 				var count = scroll[ depths[ i ] ] || scroll[ String( depths[ i ] ) ] || 0;
-				sum += ( count / base ) * depths[ i ];
+				sum += reachRatio( count, views ) * 10;
 			}
-			return Math.round( sum / depths.length );
+			return Math.round( sum );
 		}
 
 		function renderScrollChart( scroll ) {
@@ -1043,15 +1229,13 @@
 			}
 			box.innerHTML = '';
 			var depths = [ 10, 20, 30, 40, 50, 60, 70, 80, 90, 100 ];
-			var base = scroll ? ( scroll[ 10 ] || scroll[ '10' ] || 0 ) : 0;
-			var max = 1;
+			// 分母は閲覧数（10% に届かなかった閲覧も含める）。
+			var views = state.data && state.data.totals ? ( state.data.totals.pageviews || 0 ) : 0;
 			var i;
-			for ( i = 0; i < depths.length; i++ ) {
-				max = Math.max( max, scroll ? ( scroll[ depths[ i ] ] || scroll[ String( depths[ i ] ) ] || 0 ) : 0 );
-			}
 
 			for ( i = 0; i < depths.length; i++ ) {
 				var count = scroll ? ( scroll[ depths[ i ] ] || scroll[ String( depths[ i ] ) ] || 0 ) : 0;
+				var reach = reachRatio( count, views );
 				var row = document.createElement( 'div' );
 				row.className = 'kashiwazaki-seo-heatmap-scroll-row';
 
@@ -1062,12 +1246,12 @@
 				var bar = document.createElement( 'span' );
 				bar.className = 'kashiwazaki-seo-heatmap-scroll-bar';
 				var fill = document.createElement( 'span' );
-				fill.style.width = Math.round( ( count / max ) * 100 ) + '%';
+				fill.style.width = Math.round( reach * 100 ) + '%';
 				bar.appendChild( fill );
 
 				var label = document.createElement( 'span' );
 				label.className = 'kashiwazaki-seo-heatmap-scroll-count';
-				label.textContent = base > 0 ? Math.round( ( count / base ) * 100 ) + '%' : '—';
+				label.textContent = views > 0 ? Math.round( reach * 100 ) + '%' : '—';
 
 				row.appendChild( depth );
 				row.appendChild( bar );
@@ -1168,10 +1352,17 @@
 			// ベース画像は変わらないので、印だけ描き直す。
 			paint();
 
+			// 選んだ要素がプレビューの真ん中に来るように、プレビューの中をスクロールする。
 			var point = state.pointByKey[ state.highlightKey ];
-			if ( point && wrap ) {
-				wrap.scrollTo( {
-					top: Math.max( 0, point.y - wrap.clientHeight / 2 ),
+			var win = null;
+			try {
+				win = frame.contentWindow;
+			} catch ( e ) {
+				win = null;
+			}
+			if ( point && win ) {
+				win.scrollTo( {
+					top: Math.max( 0, point.y - frameViewportHeight() / 2 ),
 					behavior: 'smooth'
 				} );
 			}
@@ -1431,6 +1622,38 @@
 		} );
 	}
 
+	/**
+	 * 設定画面で、入力を変えて保存していないままタブを押したら、移動してよいかを確かめる。
+	 * キャンセルなら移動しない。保存（送信）や、左メニュー・ブラウザの戻るでは確かめない（今までと同じ）。
+	 * 設定のフォームとタブが無い画面では何もしない。
+	 * 公式: MDN Window.confirm「A boolean indicating whether OK (true) or Cancel (false) was selected」。
+	 */
+	function initSettingsTabsGuard() {
+		var form = document.querySelector( '.kashiwazaki-seo-heatmap-wrap form[action="options.php"]' );
+		var tabs = document.querySelectorAll( '.kashiwazaki-seo-heatmap-tabs a.nav-tab' );
+		if ( ! form || ! tabs.length ) {
+			return;
+		}
+
+		var dirty = false;
+		var markDirty = function () {
+			dirty = true;
+		};
+		form.addEventListener( 'input', markDirty );
+		form.addEventListener( 'change', markDirty );
+		form.addEventListener( 'submit', function () {
+			dirty = false;
+		} );
+
+		Array.prototype.forEach.call( tabs, function ( tab ) {
+			tab.addEventListener( 'click', function ( event ) {
+				if ( dirty && ! window.confirm( CFG.i18n.unsavedLeave || '保存していない変更があります。このまま移動しますか？' ) ) {
+					event.preventDefault();
+				}
+			} );
+		} );
+	}
+
 	/* ------------------------------------------------------------------ */
 	/* 起動                                                                */
 	/* ------------------------------------------------------------------ */
@@ -1440,10 +1663,12 @@
 			initHeatmapPage();
 			initDashboard();
 			initSettingsPage();
+			initSettingsTabsGuard();
 		} );
 	} else {
 		initHeatmapPage();
 		initDashboard();
 		initSettingsPage();
+		initSettingsTabsGuard();
 	}
 } )();
